@@ -32,10 +32,15 @@ class Transcriber:
         self.temp_dir = tempfile.gettempdir()
 
     def wav_to_ogg(self, wav_path):
-        a = AudioSegment.from_wav(wav_path)
-        a = a.set_frame_rate(self.sample_rate)
-        ogg_path = self.temp_dir + "/" + os.path.basename(wav_path[:-3]) + "ogg"
-        a.export(ogg_path, format="opus", bitrate=self.ogg_bitrate)
+        try:
+            a = AudioSegment.from_wav(wav_path)
+            a = a.set_frame_rate(self.sample_rate)
+            ogg_path = self.temp_dir + "/" + os.path.basename(wav_path[:-4]) + ".ogg"
+            a.export(ogg_path, format="opus", bitrate=self.ogg_bitrate)
+        except Exception:
+            print("Exception occured while converting:", wav_path)
+            traceback.print_exc()
+            return
         return ogg_path
 
     def upload_ogg(self, file_path):

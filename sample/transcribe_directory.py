@@ -58,6 +58,13 @@ def main():
     for wav_path in wavs:
         # Convert wav to ogg
         ogg_path = transcriber.wav_to_ogg(wav_path)
+        # If there's an error
+        if ogg_path is None:
+            # Create empty json to skip the wav during next runs
+            json_path = wav_path[:-4] + ".json"
+            with open(json_path, "w") as f:
+                f.write("")
+            continue
         # Upload ogg to object storage
         ogg_link = transcriber.upload_ogg(ogg_path)
         # Start transcribing task
@@ -82,6 +89,8 @@ def main():
             print(traceback.format_exc())
             continue
         # Create html table
+        if df is None:
+            continue
         html = parser.create_html(df)
         html_path = parser.name_html(wav_path)
         # Write table
