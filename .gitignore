@@ -161,3 +161,6 @@ cython_debug/
 
 # Credentials
 credentials.ini
+
+# VS Code
+.vscode
