@@ -57,9 +57,18 @@ docker build -t speechkitty .
 
 Building image may take a while. After it finishes:
 
-4. Run container. Assuming you have records in /mnt/Records and/or its subdirectories, the command will look like:
+4. Run container. Assuming you have records in /mnt/Records and/or its subdirectories, current directory in terminal is project's directory, and you have credentials.ini file in the sample directory, the command will look like:
 
+```
+source <(grep = ./sample/credentials.ini)
+
+docker run -i --rm -v /mnt/Records:/mnt/Records speechkitty \
+/bin/bash -c "python ./sample/transcribe_directory.py \
+/mnt/Records $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY \
+$STORAGE_BUCKET_NAME $TRANSCRIBE_API_KEY md5"
+```
+Or you can use bash script:
 ```console
-docker run -i --rm -v /mnt/Records:/mnt/Records speechkitty /bin/bash -c "/usr/bin/bash /root/transcribe_directory.sh /mnt/Records"
+bash transcribe_directory.sh /mnt/Records
 ```
 Transcribing job may take a while. A good sign that indicates it's working is an appearance of some new json and html files in records directory.
