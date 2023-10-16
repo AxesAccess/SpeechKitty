@@ -1,5 +1,6 @@
 import hashlib
 import os
+import warnings
 import pandas as pd
 
 
@@ -28,8 +29,8 @@ class Parser:
         </html>
         """
 
-    def __init__(self, filename_hash_func="") -> None:
-        self.hash_func = filename_hash_func
+    def __init__(self) -> None:
+        pass
 
     def parse_result(self, result):
         df = pd.DataFrame()
@@ -57,12 +58,17 @@ class Parser:
         table = df.to_html(index=False)
         return self.header + table + self.footer
 
-    def name_html(self, wav_path):
+    def name_html(self, wav_path, hash_func):
         wav_name = os.path.basename(wav_path)
-        if self.hash_func:
-            h = getattr(hashlib, self.hash_func)
+        # Exclude variable length digest algorithms
+        algorithms_exclude = {"shake_128", "shake_256"}
+        algorithms = hashlib.algorithms_guaranteed - algorithms_exclude
+        if hash_func in algorithms:
+            h = getattr(hashlib, hash_func)
             wav_name = os.path.basename(wav_path)
             html_name = h(wav_name.encode()).hexdigest() + ".html"
         else:
+            if hash_func in algorithms_exclude:
+                warnings.warn("Hash_func is not supported. Filename won't change.")
             html_name = wav_name[:-4] + ".html"
         return os.path.dirname(wav_path) + "/" + html_name

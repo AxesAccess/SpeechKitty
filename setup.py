@@ -5,7 +5,7 @@ with open("./README.md", "r") as f:
 
 setup(
     name="speechkitty",
-    version="0.1.2",
+    version="0.1.3",
     description="A wrapper for Yandex SpeechKit API to asyncronously transcribe audio records.",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -16,7 +16,7 @@ setup(
     author_email="speechkitty@outlook.com",
     license="Apache 2.0",
     zip_safe=False,
-    install_requires=["boto3", "pandas", "pydub", "Requests"],
+    install_requires=["boto3", "pandas", "pydub", "Requests", "moto"],
     python_requires=">=3.8",
     classifiers=[
         "License :: OSI Approved :: Apache Software License",

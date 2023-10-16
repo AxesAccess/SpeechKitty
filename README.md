@@ -4,7 +4,7 @@ SpeechKitty is a wrapper for Yandex SpeechKit API to asyncronously transcribe au
 
 > **NOTE**
 > 
-> It's very initial version of the package. It works perfectly in my case with Asterisk records so its version is 0.1 and not 0.0.1, but it's not tested in other use cases and with other records so you may want to wait for version 0.2 to try it.
+> It's very initial version of the package. It works perfectly in my case with Asterisk records, but it's not tested in other use cases and with other records so you may want to wait for version 0.2 to try it.
 
 ## Key features:
 
@@ -19,27 +19,39 @@ SpeechKitty is a wrapper for Yandex SpeechKit API to asyncronously transcribe au
 
 You can use it as a package or a docker container.
 
+### Prerequisites
+
+* [Yandex Cloud](https://cloud.yandex.com/en/) account. 
+* [Bucket](https://cloud.yandex.ru/docs/storage/operations/buckets/create) at Object Storage. 
+* [Static access key](https://cloud.yandex.ru/docs/iam/operations/sa/create-access-key) for Object Storage.
+* [API key](https://cloud.yandex.ru/docs/iam/concepts/authorization/api-key) for SpeechKit.
+
 ### Python Package
 
-0. Install required [ffmpeg](https://ffmpeg.org/download.html) library. Depending on your distribution the command may look like:
+0. Install required [ffmpeg](https://ffmpeg.org/download.html) library.
 
-```console
-sudo apt-get install ffmpeg
-```
-or
-```console
-sudo yum install ffmpeg
-```
-
-1. Install package.
+2. Create venv (preferably) and install package.
 
 ```console
 pip install speechkitty
 ```
 
-2. Download scripts from sample directory at [project page](https://github.com/AlekseiPrishchepo/SpeechKitty/blob/main/sample) and modify them according to your task. 
+3. Download scripts from sample directory at [project page](https://github.com/AlekseiPrishchepo/SpeechKitty/tree/main/sample):
 
-3. Retrieve credentials from Yandex Cloud and use them to initialize objects.
+* [credentials-example.ini](https://github.com/AlekseiPrishchepo/SpeechKitty/blob/main/sample/credentials-example.ini) — rename to *credentials.ini*
+* [transcribe_directory.py](https://github.com/AlekseiPrishchepo/SpeechKitty/blob/main/sample/transcribe_directory.py)
+
+4. Fill credentials into *credentials.ini*
+
+5. Start transcribing a directory (/mnt/Records in the example below):
+
+```console
+
+source <(grep = credentials.ini)
+
+python transcribe_directory.py /mnt/Records $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY $STORAGE_BUCKET_NAME $TRANSCRIBE_API_KEY
+
+```
 
 ### Docker Container
 
@@ -69,6 +81,6 @@ $STORAGE_BUCKET_NAME $TRANSCRIBE_API_KEY md5"
 ```
 Or you can use bash script:
 ```console
-bash transcribe_directory.sh /mnt/Records
+source ./sample/transcribe_directory.sh /mnt/Records
 ```
 Transcribing job may take a while. A good sign that indicates it's working is an appearance of some new json and html files in records directory.

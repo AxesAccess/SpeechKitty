@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 import time
@@ -26,10 +27,10 @@ def main():
     exclude = "^.+(:?-in|-out)\\.wav$"
 
     # Set up directory
-    directory = Directory(rec_dir, regexp_exclude=exclude)
+    directory = Directory(rec_dir)
 
     # Find files recursively
-    wavs = directory.get_wavs()
+    wavs = directory.get_wavs(regexp_exclude=exclude)
 
     # If there're no files found just exit silently
     if not wavs:
@@ -53,7 +54,7 @@ def main():
         storage_bucket_name,
         transcribe_api_key,
     )
-    parser = Parser(filename_hash_func=filename_hash_func)
+    parser = Parser()
 
     for wav_path in wavs:
         # Convert wav to ogg
@@ -80,7 +81,7 @@ def main():
         # Compose resulting json path
         json_path = wav_path[:-4] + ".json"
         with open(json_path, "w") as f:
-            f.write(str(result))
+            f.write(json.dumps(result))
         # Parse json into pandas dataframe
         try:
             df = parser.parse_result(result)
@@ -92,7 +93,7 @@ def main():
         if df is None:
             continue
         html = parser.create_html(df)
-        html_path = parser.name_html(wav_path)
+        html_path = parser.name_html(wav_path, hash_func=filename_hash_func)
         # Write table
         with open(html_path, "w") as f:
             f.write(html)

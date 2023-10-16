@@ -7,6 +7,14 @@ import boto3
 
 
 class Transcriber:
+    region_name = "ru-central1"
+    sample_rate = 48000
+    ogg_bitrate = "256k"
+    storage_endpoint = "https://storage.yandexcloud.net"
+    storage_base_url = "https://storage.yandexcloud.net"
+    transcribe_endpoint = "https://transcribe.api.cloud.yandex.net/speech/stt/v2"
+    operation_endpoint = "https://operation.api.cloud.yandex.net/operations"
+
     def __init__(
         self,
         aws_access_key_id,
@@ -14,21 +22,14 @@ class Transcriber:
         storage_bucket_name,
         transcribe_api_key,
         language_code="ru-RU",
-        mode="longRunningRecognize"
-
+        mode="longRunningRecognize",
     ) -> None:
-        self.region_name = "ru-central1"
         self.aws_key_id = aws_access_key_id
         self.aws_key = aws_secret_access_key
-        self.sample_rate = 48000
-        self.ogg_bitrate = "256k"
-        self.storage_endpoint = "https://storage.yandexcloud.net"
-        self.storage_base_url = "https://storage.yandexcloud.net"
         self.storage_bucket_name = storage_bucket_name
-        self.transcribe_endpoint = f"https://transcribe.api.cloud.yandex.net/speech/stt/v2/{mode}"
         self.transcribe_api_key = transcribe_api_key
         self.language_code = language_code
-        self.operation_endpoint = "https://operation.api.cloud.yandex.net/operations"
+        self.transcribe_endpoint = f"{self.transcribe_endpoint}/{mode}"
         self.temp_dir = tempfile.gettempdir()
 
     def wav_to_ogg(self, wav_path):
@@ -43,17 +44,20 @@ class Transcriber:
             return
         return ogg_path
 
-    def upload_ogg(self, file_path):
-        session = boto3.session.Session(
-            region_name=self.region_name,
-            aws_access_key_id=self.aws_key_id,
-            aws_secret_access_key=self.aws_key,
-        )
-        s3 = session.client(service_name="s3", endpoint_url=self.storage_endpoint)
+    def upload_ogg(self, file_path, s3_client=None):
         file_name = os.path.basename(file_path)
         file_link = f"{self.storage_base_url}/{self.storage_bucket_name}/{file_name}"
+        if not s3_client:
+            session = boto3.session.Session(
+                region_name=self.region_name,
+                aws_access_key_id=self.aws_key_id,
+                aws_secret_access_key=self.aws_key,
+            )
+            s3_client = session.client(
+                service_name="s3", endpoint_url=self.storage_endpoint
+            )
         try:
-            s3.upload_file(file_path, self.storage_bucket_name, file_name)
+            s3_client.upload_file(file_path, self.storage_bucket_name, file_name)
         except Exception:
             traceback.print_exc()
             return

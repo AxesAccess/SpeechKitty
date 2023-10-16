@@ -1,0 +1,407 @@
+{
+    "done": true,
+    "response": {
+        "@type": "type.googleapis.com/yandex.cloud.ai.stt.v2.LongRunningRecognitionResponse",
+        "chunks": [
+            {
+                "alternatives": [
+                    {
+                        "words": [
+                            {
+                                "startTime": "10.179s",
+                                "endTime": "10.840s",
+                                "word": "здравствуйте",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "11.420s",
+                                "endTime": "11.969s",
+                                "word": "спасибо",
+                                "confidence": 1
+                            }
+                        ],
+                        "text": "Здравствуйте спасибо",
+                        "confidence": 1
+                    }
+                ],
+                "channelTag": "1"
+            },
+            {
+                "alternatives": [
+                    {
+                        "words": [
+                            {
+                                "startTime": "2.159s",
+                                "endTime": "2.480s",
+                                "word": "добрый",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "2.520s",
+                                "endTime": "3s",
+                                "word": "вечер",
+                                "confidence": 1
+                            }
+                        ],
+                        "text": "Добрый вечер",
+                        "confidence": 1
+                    }
+                ],
+                "channelTag": "2"
+            },
+            {
+                "alternatives": [
+                    {
+                        "words": [
+                            {
+                                "startTime": "3.320s",
+                                "endTime": "3.420s",
+                                "word": "вас",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "3.460s",
+                                "endTime": "4.020s",
+                                "word": "приветствует",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "4.060s",
+                                "endTime": "4.740s",
+                                "word": "ростелеком",
+                                "confidence": 1
+                            }
+                        ],
+                        "text": "Вас приветствует ростелеком",
+                        "confidence": 1
+                    }
+                ],
+                "channelTag": "2"
+            },
+            {
+                "alternatives": [
+                    {
+                        "words": [
+                            {
+                                "startTime": "5.460s",
+                                "endTime": "5.980s",
+                                "word": "оставайтесь",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "6.040s",
+                                "endTime": "6.100s",
+                                "word": "на",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "6.160s",
+                                "endTime": "6.699s",
+                                "word": "линии",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "6.799s",
+                                "endTime": "6.860s",
+                                "word": "мы",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "6.919s",
+                                "endTime": "7.340s",
+                                "word": "проверяем",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "7.379s",
+                                "endTime": "7.899s",
+                                "word": "информацию",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "7.940s",
+                                "endTime": "8s",
+                                "word": "по",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "8.060s",
+                                "endTime": "8.340s",
+                                "word": "вашему",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "8.399s",
+                                "endTime": "8.820s",
+                                "word": "лицевому",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "8.859s",
+                                "endTime": "9.299s",
+                                "word": "счету",
+                                "confidence": 1
+                            }
+                        ],
+                        "text": "Оставайтесь на линии мы проверяем информацию по вашему лицевому счету",
+                        "confidence": 1
+                    }
+                ],
+                "channelTag": "2"
+            },
+            {
+                "alternatives": [
+                    {
+                        "words": [
+                            {
+                                "startTime": "25.029s",
+                                "endTime": "25.149s",
+                                "word": "для",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "25.189s",
+                                "endTime": "25.616s",
+                                "word": "получения",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "25.709s",
+                                "endTime": "26.250s",
+                                "word": "информации",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "26.289s",
+                                "endTime": "26.310s",
+                                "word": "о",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "26.350s",
+                                "endTime": "26.869s",
+                                "word": "состоянии",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "26.950s",
+                                "endTime": "27.250s",
+                                "word": "вашего",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "27.289s",
+                                "endTime": "27.720s",
+                                "word": "счета",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "28.010s",
+                                "endTime": "28.643s",
+                                "word": "детализации",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "28.690s",
+                                "endTime": "28.810s",
+                                "word": "или",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "28.850s",
+                                "endTime": "29.170s",
+                                "word": "оплате",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "29.250s",
+                                "endTime": "29.490s",
+                                "word": "услуг",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "29.530s",
+                                "endTime": "29.930s",
+                                "word": "нажмите",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "29.970s",
+                                "endTime": "30.310s",
+                                "word": "один",
+                                "confidence": 1
+                            }
+                        ],
+                        "text": "Для получения информации о состоянии вашего счета детализации или оплате услуг нажмите 1",
+                        "confidence": 1
+                    }
+                ],
+                "channelTag": "2"
+            },
+            {
+                "alternatives": [
+                    {
+                        "words": [
+                            {
+                                "startTime": "30.660s",
+                                "endTime": "30.960s",
+                                "word": "хотите",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "31.020s",
+                                "endTime": "31.459s",
+                                "word": "подключить",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "31.519s",
+                                "endTime": "31.739s",
+                                "word": "новые",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "31.800s",
+                                "endTime": "32.359s",
+                                "word": "услуги",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "32.519s",
+                                "endTime": "32.900s",
+                                "word": "нажмите",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "32.959s",
+                                "endTime": "33.479s",
+                                "word": "два",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "33.560s",
+                                "endTime": "33.800s",
+                                "word": "нужна",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "33.860s",
+                                "endTime": "34.439s",
+                                "word": "техническая",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "34.499s",
+                                "endTime": "35s",
+                                "word": "помощь",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "35.100s",
+                                "endTime": "35.480s",
+                                "word": "нажмите",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "35.540s",
+                                "endTime": "35.780s",
+                                "word": "три",
+                                "confidence": 1
+                            }
+                        ],
+                        "text": "Хотите подключить новые услуги нажмите 2 нужна техническая помощь нажмите 3",
+                        "confidence": 1
+                    }
+                ],
+                "channelTag": "2"
+            },
+            {
+                "alternatives": [
+                    {
+                        "words": [
+                            {
+                                "startTime": "36.150s",
+                                "endTime": "36.689s",
+                                "word": "планируете",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "36.749s",
+                                "endTime": "37.390s",
+                                "word": "переехать",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "37.510s",
+                                "endTime": "37.529s",
+                                "word": "и",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "37.590s",
+                                "endTime": "37.909s",
+                                "word": "хотите",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "37.950s",
+                                "endTime": "38.370s",
+                                "word": "перенести",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "38.410s",
+                                "endTime": "38.550s",
+                                "word": "все",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "38.590s",
+                                "endTime": "38.930s",
+                                "word": "услуги",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "38.989s",
+                                "endTime": "39.050s",
+                                "word": "на",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "39.110s",
+                                "endTime": "39.350s",
+                                "word": "новый",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "39.489s",
+                                "endTime": "39.950s",
+                                "word": "адрес",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "40.110s",
+                                "endTime": "40.470s",
+                                "word": "нажмите",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "40.530s",
+                                "endTime": "40.929s",
+                                "word": "четыре",
+                                "confidence": 1
+                            }
+                        ],
+                        "text": "Планируете переехать и хотите перенести все услуги на новый адрес нажмите 4",
+                        "confidence": 1
+                    }
+                ],
+                "channelTag": "2"
+            }
+        ]
+    },
+    "id": "e03juoq6d3qnlf9j264m",
+    "createdAt": "2023-10-14T20:12:58Z",
+    "createdBy": "aje5o720ktumv8shjg0l",
+    "modifiedAt": "2023-10-14T20:13:08Z"
+}
