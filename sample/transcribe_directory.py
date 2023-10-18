@@ -9,17 +9,16 @@ from speechkitty import Directory, Transcriber, Parser
 def main():
     try:
         rec_dir = sys.argv[1]
-        aws_access_key_id = sys.argv[2]
-        aws_secret_access_key = sys.argv[3]
-        storage_bucket_name = sys.argv[4]
-        transcribe_api_key = sys.argv[5]
-        transcribe_api_key = sys.argv[5]
+        aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
+        aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
+        storage_bucket_name = os.environ.get("STORAGE_BUCKET_NAME")
+        transcribe_api_key = os.environ.get("TRANSCRIBE_API_KEY")
     except Exception:
         print("Not enough arguments.")
         return 1
 
     try:
-        filename_hash_func = sys.argv[6]
+        filename_hash_func = sys.argv[2]
     except Exception:
         filename_hash_func = None
 
