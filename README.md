@@ -46,7 +46,7 @@ pip install speechkitty
 5. Start transcribing a directory (/mnt/Records in the example below):
 
 ```console
-(grep = credentials.ini) > credentials.txt
+grep = credentials.ini > credentials.txt
 
 python transcribe_directory.py /mnt/Records
 ```
@@ -69,7 +69,7 @@ Building image may take a while. After it finishes:
 
 4. Run container. Assuming you have records in /mnt/Records and/or its subdirectories, current directory in terminal is project's directory, and you have credentials.ini file in the sample directory, the command will look like:
 
-```
+```console
 grep = sample/credentials.ini > sample/credentials.txt
 
 docker run -i --rm --env-file sample/credentials.txt -v /mnt/Records:/mnt/Records \
@@ -83,6 +83,6 @@ To name html files using hash of the audio files names, add hash function as a s
 ```console
 source sample/transcribe_directory.sh /mnt/Records md5
 ```
-It might be useful if records directory is published using web server (with option preventing directory listing) and you don't want to disclose names of audio files to prevent downloading files by direct link. 
+This can be useful if records directory is being published using a web server (with option preventing directory listing, of course) and you don't want to reveal names of audio files to prevent files from being downloaded via direct link. So you can put something like ```SELECT CONCAT(TO_HEX(MD5(recordingfile)), ".html") AS transcript``` into the DB view to get names of the html files.
 
 Transcribing job may take a while. A good sign that indicates it's working is an appearance of some new json and html files in records directory.

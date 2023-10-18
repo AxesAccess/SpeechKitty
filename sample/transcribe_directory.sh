@@ -16,8 +16,8 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 # Parse credentials.ini for variables
 grep = $SCRIPT_DIR/credentials.ini >$SCRIPT_DIR/credentials.txt
 
-# 'md5' at the end tells script to name html files using hash from the name of the audio file
-# delete it if you want to name html files after audio files
+# If the second parameter contains name of hash function then the names of html files
+# will use hash of the audio files 
 docker run -i --rm --env-file $SCRIPT_DIR/credentials.txt -v $1:/mnt/Records \
 speechkitty /bin/bash -c "python sample/transcribe_directory.py /mnt/Records $2"
 
