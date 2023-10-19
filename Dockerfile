@@ -13,5 +13,4 @@ WORKDIR /root/
 
 COPY . .
 
-RUN pip install --user --no-cache-dir -r requirements.txt
-RUN python setup.py bdist_wheel && pip install .
+RUN pip install .
