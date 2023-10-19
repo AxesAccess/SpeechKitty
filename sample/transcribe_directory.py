@@ -13,6 +13,7 @@ def main():
         aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
         storage_bucket_name = os.environ.get("STORAGE_BUCKET_NAME")
         transcribe_api_key = os.environ.get("TRANSCRIBE_API_KEY")
+        language_code = os.environ.get("LANGUAGE_CODE")
     except Exception:
         print("Not enough arguments.")
         return 1
@@ -35,13 +36,6 @@ def main():
     if not wavs:
         return
 
-    # This is business specific, delete it from your production code
-    for i in range(len(wavs)):
-        if "wav-mix" in wavs[i]:
-            new = wavs[i].replace(".wav-mix", "")
-            os.rename(wavs[i], new)
-            wavs[i] = new
-
     wavs = list(set(wavs))
 
     # If you want to limit number of records processed
@@ -52,6 +46,7 @@ def main():
         aws_secret_access_key,
         storage_bucket_name,
         transcribe_api_key,
+        language_code,
     )
     parser = Parser()
 
@@ -65,22 +60,28 @@ def main():
             with open(json_path, "w") as f:
                 f.write("")
             continue
+
         # Upload ogg to object storage
         ogg_link = transcriber.upload_ogg(ogg_path)
+
         # Start transcribing task
         id = transcriber.submit_task(ogg_link)
+
         # Limit number of attempts to get result
         for i in range(100):
             time.sleep(3)
             result = transcriber.get_result(id)
             if result["done"]:
                 break
+
         # Delete ogg from temp_dir and object storage
         transcriber.delete_ogg(ogg_path)
+
         # Compose resulting json path
         json_path = wav_path[:-4] + ".json"
         with open(json_path, "w") as f:
             f.write(json.dumps(result))
+
         # Parse json into pandas dataframe
         try:
             df = parser.parse_result(result)
