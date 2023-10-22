@@ -1,3 +1,4 @@
+from __future__ import annotations
 import hashlib
 import os
 import warnings
@@ -7,43 +8,40 @@ import pandas as pd
 class Parser:
     # Header to put in the html file
     header = """
-        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-        <html xmlns="https://www.w3.org/1999/xhtml">
-            <head>
-                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-                <title>Recording</title>
-                <style>
-                table {width: 100%; border-collapse: collapse; border: 0px;}
-                th {padding: 4px; border-left: 0px; border-right: 0px;
-                    border-bottom: 2px solid #ddd; text-align: left;}
-                td {padding: 4px; border-left: 0px; border-right: 0px;
-                    border-bottom: 1px solid #ddd;}
-                </style>
-            </head>
-            <body style="padding:0px; margin:0px; word-break: normal;">
-        """
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="https://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Recording</title>
+        <style>
+        table {width: 100%; border-collapse: collapse; border: 0px;}
+        th {padding: 4px; border-left: 0px; border-right: 0px;
+            border-bottom: 1px solid #ddd; text-align: center; font-weight: normal!important;}
+        td {padding: 4px; border-left: 0px; border-right: 0px;
+            border-bottom: 1px solid #ddd; font-weight: normal!important;}
+        </style>
+    </head>
+    <body style="padding:0px; margin:0px; word-break: normal;">
+"""
     # Footer
     footer = """
-            </body>
-        </html>
-        """
+    </body>
+</html>
+"""
 
     def __init__(self) -> None:
         pass
 
-    def parse_result(self, result):
+    def parse_result(self, result) -> pd.DataFrame | None:
+        """Parses resulting json into a dataframe"""
         df = pd.DataFrame()
         if "chunks" not in result["response"]:
             return
         for chunk in result["response"]["chunks"]:
             row = dict()
-            row["startTime"] = [
-                chunk["alternatives"][0]["words"][0]["startTime"].replace("s", "")
-            ]
-            row["endTime"] = [
-                chunk["alternatives"][0]["words"][-1]["endTime"].replace("s", "")
-            ]
+            row["startTime"] = [chunk["alternatives"][0]["words"][0]["startTime"].replace("s", "")]
+            row["endTime"] = [chunk["alternatives"][0]["words"][-1]["endTime"].replace("s", "")]
             row["channelTag"] = [chunk["channelTag"]]
             row["text"] = [chunk["alternatives"][0]["text"]]
             df = pd.concat([df, pd.DataFrame(row)], ignore_index=True)
@@ -54,11 +52,18 @@ class Parser:
 
         return df.reset_index(drop=True)
 
-    def create_html(self, df):
-        table = df.to_html(index=False)
+    def create_html(self, df: pd.DataFrame) -> str:
+        df = df.pivot_table(
+            index=["startTime", "endTime"],
+            values="text",
+            columns=["channelTag"],
+            aggfunc="first",
+            fill_value="",
+        )
+        table = df.to_html(index=True)
         return self.header + table + self.footer
 
-    def name_html(self, wav_path, hash_func):
+    def name_html(self, wav_path: str, hash_func: str) -> str:
         wav_name = os.path.basename(wav_path)
         # Exclude variable length digest algorithms
         algorithms_exclude = {"shake_128", "shake_256"}

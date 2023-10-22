@@ -5,7 +5,7 @@ with open("./README.md", "r") as f:
 
 setup(
     name="speechkitty",
-    version="0.1.3",
+    version="0.1.5",
     description="A wrapper for Yandex SpeechKit API to asyncronously transcribe audio records.",
     long_description=long_description,
     long_description_content_type="text/markdown",
