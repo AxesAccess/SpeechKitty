@@ -3,30 +3,35 @@ import re
 
 
 class Directory:
-    """Scans direcory for audio files."""
+    """Scans directory for files"""
 
-    def __init__(self, path) -> None:
+    def __init__(self, path: str) -> None:
         self.directory = path
 
-    def get_wavs(
-        self, regexp_include="^.+\\.wav$", regexp_exclude="", skip_processed=True
-    ) -> list:
-        """Returns list of paths of wav files in a directory and its subdirectories."""
-        regexp_include = re.compile(regexp_include)
-        regexp_exclude = re.compile(regexp_exclude) if regexp_exclude else None
+    def walk_dir(self) -> list:
+        """Returns list of paths of all files in a directory and its subdirectories"""
         paths = []
         for path, subdirs, files in os.walk(self.directory):
             for name in files:
                 paths += [os.path.join(path, name)]
+        return paths
 
-        if regexp_exclude:
-            wavs_paths = [
-                f
-                for f in paths
-                if re.search(regexp_include, f) and not re.search(regexp_exclude, f)
-            ]
+    def get_wavs(
+        self,
+        regexp_include: str = "^.+\\.wav$",
+        regexp_exclude: str = "",
+        skip_processed: bool = False,
+    ) -> list:
+        """Returns list of paths of files matching given regex expressions in a directory
+        and its subdirectories skipping already processed"""
+        incl = re.compile(regexp_include)
+        excl = re.compile(regexp_exclude) if regexp_exclude else None
+        paths = self.walk_dir()
+
+        if excl:
+            wavs_paths = [f for f in paths if re.search(incl, f) and not re.search(excl, f)]
         else:
-            wavs_paths = [f for f in paths if re.search(regexp_include, f)]
+            wavs_paths = [f for f in paths if re.search(incl, f)]
 
         if skip_processed:
             processed = [f[:-5] for f in paths if f[-5:] == ".json"]
