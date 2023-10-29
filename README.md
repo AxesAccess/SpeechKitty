@@ -1,5 +1,7 @@
 # SpeechKitty
 
+![python-package](https://github.com/AlekseiPrishchepo/SpeechKitty/actions/workflows/python-package.yml/badge.svg) ![docker-image](https://github.com/AlekseiPrishchepo/SpeechKitty/actions/workflows/docker-image.yml/badge.svg)
+
 SpeechKitty is a wrapper for Yandex SpeechKit API to asyncronously transcribe audio records. 
 
 > **NOTE**
