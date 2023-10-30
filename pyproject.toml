@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "speechkitty"
+description = "A wrapper for Yandex SpeechKit API to asyncronously transcribe audio records."
+dynamic = ["readme"]
+authors = [{ name = "Aleksei Prishchepo", email = "speechkitty@outlook.com" }]
+version = "0.1.6"
+license = { text = "Apache 2.0" }
+requires-python = ">=3.8"
+dependencies = ["boto3", "pandas", "pydub", "requests"]
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Operating System :: OS Independent",
+    "Development Status :: 2 - Pre-Alpha",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+
+[tool.setuptools.packages.find]
+where = ["app"]
+include = ["speechkitty*"]
+
+[tool.setuptools.dynamic]
+readme = { file = "README.md", content-type = "text/markdown" }
+
+[project.optional-dependencies]
+dev = ["pytest", "moto", "requests_mock"]
+
+[project.urls]
+Homepage = "https://github.com/AlekseiPrishchepo/SpeechKitty"
+Source = "https://github.com/AlekseiPrishchepo/SpeechKitty"
