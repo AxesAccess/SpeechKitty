@@ -22,8 +22,8 @@ def main():
 
     df = pd.DataFrame(wavs, columns=["filename"])
 
-    df.loc[:, "recordingfile"] = df["filename"].str.replace(".wav-in", "")
-    df.loc[:, "recordingfile"] = df["recordingfile"].str.replace(".wav-out", "")
+    df.loc[:, "recordingfile"] = df["filename"].str.replace(".wav-in", "", regex=False)
+    df.loc[:, "recordingfile"] = df["recordingfile"].str.replace(".wav-out", "", regex=False)
     df.loc[:, "channel"] = df["filename"].apply(
         lambda x: "inbound" if "wav-in" in x else "outbound"
     )

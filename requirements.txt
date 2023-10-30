@@ -3,3 +3,4 @@ pandas
 pydub
 Requests
 moto
+requests_mock

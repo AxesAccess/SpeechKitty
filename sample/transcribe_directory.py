@@ -1,7 +1,6 @@
 import json
 import os
 import sys
-import time
 import traceback
 from speechkitty import Directory, Transcriber, Parser
 
@@ -54,50 +53,22 @@ def main():
         storage_bucket_name=storage_bucket_name,
         transcribe_api_key=transcribe_api_key,
         language_code=language_code,
+        raise_exceptions=False,
     )
     parser = Parser()
 
     for wav_path in wavs:
-        # Convert wav to ogg
-        ogg_path = transcriber.wav_to_ogg(wav_path)
-        # If there's an error converting file
-        if ogg_path is None:
-            # Create empty json to skip the wav during next runs
-            json_path = wav_path[:-4] + ".json"
+        result = transcriber.transcribe_file(wav_path)
+
+        # Compose resulting json path
+        json_path = wav_path[:-4] + ".json"
+
+        # Create empty json to skip the wav during next runs
+        if len(result) == 0:
             with open(json_path, "w") as f:
                 f.write("")
             continue
 
-        # Upload ogg to object storage
-        ogg_link = transcriber.upload_ogg(ogg_path)
-
-        # If upload ends with error
-        if ogg_link is None:
-            continue
-
-        # Start transcribing task
-        id = transcriber.submit_task(ogg_link)
-
-        result = ""
-        # Limit number of attempts to get result
-        for i in range(100):
-            time.sleep(3)
-            result = transcriber.get_result(id)
-            # If there's an error, stop trying
-            try:
-                if result["done"]:
-                    break
-            except Exception:
-                break
-
-        if len(result) == 0:
-            continue
-
-        # Delete ogg from temp_dir and object storage
-        transcriber.delete_ogg(ogg_path)
-
-        # Compose resulting json path
-        json_path = wav_path[:-4] + ".json"
         with open(json_path, "w") as f:
             f.write(json.dumps(result, ensure_ascii=False))
 
