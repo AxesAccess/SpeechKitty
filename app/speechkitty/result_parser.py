@@ -15,11 +15,12 @@ class Parser:
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <title>Recording</title>
         <style>
-        table {width: 100%; border-collapse: collapse; border: 0px;}
-        th {padding: 4px; border-left: 0px; border-right: 0px;
-            border-bottom: 1px solid #ddd; text-align: center; font-weight: normal!important;}
-        td {padding: 4px; border-left: 0px; border-right: 0px;
-            border-bottom: 1px solid #ddd; font-weight: normal!important;}
+            table {max-width: 800px; border-collapse: collapse; border: 0px; margin-left: auto;
+            margin-right: auto; font-family: sans-serif; font-size: small;}
+            th {padding: 4px; border-left: 0px; border-right: 0px; border-bottom: 1px solid #ddd;
+            text-align: center; font-weight: normal!important; font-family: monospace, monospace;}
+            td {padding: 4px; border-left: 0px; border-right: 0px; border-bottom: 1px solid #ddd;
+            font-weight: normal!important; width: 45%;}
         </style>
     </head>
     <body style="padding:0px; margin:0px; word-break: normal;">
