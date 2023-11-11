@@ -38,16 +38,17 @@ class Transcriber:
     def set_raise_exceptions(self, raise_exceptions: bool = True):
         self.raise_exceptions = raise_exceptions
 
-    def wav_to_ogg(self, wav_path: str) -> str | None:
+    def to_ogg(self, file_path: str) -> str | None:
         try:
-            a = AudioSegment.from_wav(wav_path)
-            ogg_path = self.temp_dir + "/" + os.path.basename(wav_path[:-4]) + ".ogg"
+            fmt = os.path.basename(file_path[-3:]).lower()
+            a = AudioSegment.from_file(file_path, fmt)
+            ogg_path = self.temp_dir + "/" + os.path.basename(file_path[:-4]) + ".ogg"
             a.export(ogg_path, format="opus")
         except Exception as e:
             if self.raise_exceptions:
                 raise e
             else:
-                warnings.warn(f"Convert error: {wav_path} {traceback.format_exc()}")
+                warnings.warn(f"Convert error: {file_path} {traceback.format_exc()}")
                 return
         return ogg_path
 
@@ -116,7 +117,7 @@ class Transcriber:
         return response
 
     def transcribe_file(self, wav_path: str, s3_client=None):
-        ogg_path = self.wav_to_ogg(wav_path)
+        ogg_path = self.to_ogg(wav_path)
 
         # Upload ogg to object storage
         ogg_link = self.upload_ogg(ogg_path, s3_client)

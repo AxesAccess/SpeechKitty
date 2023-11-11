@@ -16,9 +16,9 @@ class Directory:
                 paths += [os.path.join(path, name)]
         return paths
 
-    def get_wavs(
+    def get_records(
         self,
-        regexp_include: str = "^.+\\.wav$",
+        regexp_include: str = "^.+\\.(:?wav|mp3|wma|aac|ogg)$",
         regexp_exclude: str = "",
         skip_processed: bool = False,
     ) -> list:
