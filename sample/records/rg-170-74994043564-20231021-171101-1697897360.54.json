@@ -1,0 +1,879 @@
+{
+    "done": true,
+    "response": {
+        "@type": "type.googleapis.com/yandex.cloud.ai.stt.v2.LongRunningRecognitionResponse",
+        "chunks": [
+            {
+                "alternatives": [
+                    {
+                        "words": [
+                            {
+                                "startTime": "0s",
+                                "endTime": "0.020s",
+                                "word": "в",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "0.080s",
+                                "endTime": "0.220s",
+                                "word": "связи",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "0.260s",
+                                "endTime": "0.280s",
+                                "word": "с",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "0.320s",
+                                "endTime": "0.500s",
+                                "word": "этим",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "0.539s",
+                                "endTime": "0.620s",
+                                "word": "мы",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "0.680s",
+                                "endTime": "1.060s",
+                                "word": "проводим",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "1.079s",
+                                "endTime": "1.400s",
+                                "word": "проверку",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "1.459s",
+                                "endTime": "1.760s",
+                                "word": "зрения",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "1.839s",
+                                "endTime": "2.060s",
+                                "word": "после",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "2.100s",
+                                "endTime": "2.580s",
+                                "word": "которой",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "2.679s",
+                                "endTime": "2.780s",
+                                "word": "вы",
+                                "confidence": 1
+                            }
+                        ],
+                        "text": "В связи с этим мы проводим проверку зрения после которой вы",
+                        "confidence": 1
+                    }
+                ],
+                "channelTag": "1"
+            },
+            {
+                "alternatives": [
+                    {
+                        "words": [
+                            {
+                                "startTime": "1.439s",
+                                "endTime": "2.080s",
+                                "word": "уведомляем",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "2.159s",
+                                "endTime": "2.460s",
+                                "word": "вас",
+                                "confidence": 1
+                            }
+                        ],
+                        "text": "Уведомляем вас",
+                        "confidence": 1
+                    }
+                ],
+                "channelTag": "2"
+            },
+            {
+                "alternatives": [
+                    {
+                        "words": [
+                            {
+                                "startTime": "2.760s",
+                                "endTime": "2.880s",
+                                "word": "что",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "2.920s",
+                                "endTime": "2.960s",
+                                "word": "в",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "2.999s",
+                                "endTime": "3.239s",
+                                "word": "целях",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "3.280s",
+                                "endTime": "3.680s",
+                                "word": "контроля",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "3.740s",
+                                "endTime": "4.200s",
+                                "word": "качества",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "4.280s",
+                                "endTime": "4.720s",
+                                "word": "разговор",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "4.779s",
+                                "endTime": "5.059s",
+                                "word": "может",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "5.120s",
+                                "endTime": "5.420s",
+                                "word": "быть",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "5.519s",
+                                "endTime": "6.140s",
+                                "word": "записан",
+                                "confidence": 1
+                            }
+                        ],
+                        "text": "Что в целях контроля качества разговор может быть записан",
+                        "confidence": 1
+                    }
+                ],
+                "channelTag": "2"
+            },
+            {
+                "alternatives": [
+                    {
+                        "words": [
+                            {
+                                "startTime": "9.659s",
+                                "endTime": "9.860s",
+                                "word": "будут",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "9.900s",
+                                "endTime": "10.420s",
+                                "word": "представлены",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "10.460s",
+                                "endTime": "10.820s",
+                                "word": "разные",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "10.880s",
+                                "endTime": "11.099s",
+                                "word": "виды",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "11.139s",
+                                "endTime": "11.533s",
+                                "word": "очков",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "11.580s",
+                                "endTime": "11.680s",
+                                "word": "а",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "11.800s",
+                                "endTime": "12.060s",
+                                "word": "также",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "12.100s",
+                                "endTime": "12.633s",
+                                "word": "инновационная",
+                                "confidence": 1
+                            }
+                        ],
+                        "text": "Будут представлены разные виды очков а также инновационная",
+                        "confidence": 1
+                    }
+                ],
+                "channelTag": "1"
+            },
+            {
+                "alternatives": [
+                    {
+                        "words": [
+                            {
+                                "startTime": "17.309s",
+                                "endTime": "17.329s",
+                                "word": "а",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "17.370s",
+                                "endTime": "17.470s",
+                                "word": "что",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "17.530s",
+                                "endTime": "17.910s",
+                                "word": "касается",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "17.970s",
+                                "endTime": "18.289s",
+                                "word": "даты",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "18.349s",
+                                "endTime": "18.370s",
+                                "word": "и",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "18.430s",
+                                "endTime": "18.650s",
+                                "word": "место",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "18.690s",
+                                "endTime": "19.200s",
+                                "word": "проведения",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "19.280s",
+                                "endTime": "19.410s",
+                                "word": "то",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "19.499s",
+                                "endTime": "19.690s",
+                                "word": "наше",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "19.749s",
+                                "endTime": "20.249s",
+                                "word": "мероприятие",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "20.309s",
+                                "endTime": "20.869s",
+                                "word": "состоится",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "20.930s",
+                                "endTime": "21.129s",
+                                "word": "уже",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "21.190s",
+                                "endTime": "21.490s",
+                                "word": "двадцать",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "21.536s",
+                                "endTime": "21.870s",
+                                "word": "седьмого",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "21.930s",
+                                "endTime": "22.390s",
+                                "word": "октября",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "22.490s",
+                                "endTime": "22.669s",
+                                "word": "это",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "22.709s",
+                                "endTime": "22.990s",
+                                "word": "будет",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "23.020s",
+                                "endTime": "23.049s",
+                                "word": "в",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "23.089s",
+                                "endTime": "23.660s",
+                                "word": "пятницу",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "23.970s",
+                                "endTime": "24.030s",
+                                "word": "а",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "24.070s",
+                                "endTime": "24.190s",
+                                "word": "уже",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "24.230s",
+                                "endTime": "24.290s",
+                                "word": "за",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "24.330s",
+                                "endTime": "24.450s",
+                                "word": "ним",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "24.490s",
+                                "endTime": "24.530s",
+                                "word": "на",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "24.570s",
+                                "endTime": "25.209s",
+                                "word": "мероприятие",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "25.370s",
+                                "endTime": "25.410s",
+                                "word": "я",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "25.470s",
+                                "endTime": "25.570s",
+                                "word": "вам",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "25.610s",
+                                "endTime": "26.230s",
+                                "word": "перезвоню",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "26.310s",
+                                "endTime": "26.370s",
+                                "word": "и",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "26.450s",
+                                "endTime": "26.749s",
+                                "word": "сообщу",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "26.789s",
+                                "endTime": "27.129s",
+                                "word": "точный",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "27.150s",
+                                "endTime": "27.490s",
+                                "word": "адрес",
+                                "confidence": 1
+                            }
+                        ],
+                        "text": "А что касается даты и место проведения то наше мероприятие состоится уже 27 октября это будет в пятницу а уже за ним на мероприятие я вам перезвоню и сообщу точный адрес",
+                        "confidence": 1
+                    }
+                ],
+                "channelTag": "1"
+            },
+            {
+                "alternatives": [
+                    {
+                        "words": [
+                            {
+                                "startTime": "23.209s",
+                                "endTime": "23.230s",
+                                "word": "в",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "23.290s",
+                                "endTime": "23.830s",
+                                "word": "настоящий",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "23.889s",
+                                "endTime": "24.250s",
+                                "word": "момент",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "24.290s",
+                                "endTime": "24.470s",
+                                "word": "все",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "24.510s",
+                                "endTime": "25.010s",
+                                "word": "операторы",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "25.230s",
+                                "endTime": "25.689s",
+                                "word": "заняты",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "25.910s",
+                                "endTime": "25.990s",
+                                "word": "не",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "26.049s",
+                                "endTime": "26.430s",
+                                "word": "хотите",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "26.490s",
+                                "endTime": "26.956s",
+                                "word": "ждать",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "27.170s",
+                                "endTime": "27.650s",
+                                "word": "нажмите",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "27.730s",
+                                "endTime": "28.216s",
+                                "word": "девять",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "28.370s",
+                                "endTime": "28.410s",
+                                "word": "и",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "28.470s",
+                                "endTime": "28.549s",
+                                "word": "мы",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "28.629s",
+                                "endTime": "28.910s",
+                                "word": "сами",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "28.970s",
+                                "endTime": "29.109s",
+                                "word": "вам",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "29.149s",
+                                "endTime": "29.710s",
+                                "word": "перезвоним",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "29.769s",
+                                "endTime": "29.929s",
+                                "word": "как",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "29.990s",
+                                "endTime": "30.290s",
+                                "word": "только",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "30.330s",
+                                "endTime": "31.203s",
+                                "word": "освободимся",
+                                "confidence": 1
+                            }
+                        ],
+                        "text": "В настоящий момент все операторы заняты не хотите ждать нажмите 9 и мы сами вам перезвоним как только освободимся",
+                        "confidence": 1
+                    }
+                ],
+                "channelTag": "2"
+            },
+            {
+                "alternatives": [
+                    {
+                        "words": [
+                            {
+                                "startTime": "32.690s",
+                                "endTime": "32.710s",
+                                "word": "я",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "32.770s",
+                                "endTime": "33.009s",
+                                "word": "думаю",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "33.070s",
+                                "endTime": "33.130s",
+                                "word": "вы",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "33.170s",
+                                "endTime": "33.670s",
+                                "word": "согласитесь",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "33.710s",
+                                "endTime": "33.770s",
+                                "word": "со",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "33.810s",
+                                "endTime": "33.996s",
+                                "word": "мной",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "34.049s",
+                                "endTime": "34.290s",
+                                "word": "что",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "34.380s",
+                                "endTime": "34.610s",
+                                "word": "лучше",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "34.650s",
+                                "endTime": "35.190s",
+                                "word": "предотвращать",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "35.250s",
+                                "endTime": "35.609s",
+                                "word": "болезни",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "35.690s",
+                                "endTime": "35.829s",
+                                "word": "чем",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "35.890s",
+                                "endTime": "35.970s",
+                                "word": "их",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "36.010s",
+                                "endTime": "36.249s",
+                                "word": "потом",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "36.310s",
+                                "endTime": "36.749s",
+                                "word": "лечить",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "37.050s",
+                                "endTime": "37.070s",
+                                "word": "а",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "37.130s",
+                                "endTime": "37.183s",
+                                "word": "мы",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "37.230s",
+                                "endTime": "37.610s",
+                                "word": "бесплатно",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "37.650s",
+                                "endTime": "38.350s",
+                                "word": "проконсультируем",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "38.390s",
+                                "endTime": "38.749s",
+                                "word": "проведем",
+                                "confidence": 1
+                            }
+                        ],
+                        "text": "Я думаю вы согласитесь со мной что лучше предотвращать болезни чем их потом лечить а мы бесплатно проконсультируем проведем",
+                        "confidence": 1
+                    }
+                ],
+                "channelTag": "1"
+            },
+            {
+                "alternatives": [
+                    {
+                        "words": [
+                            {
+                                "startTime": "37.339s",
+                                "endTime": "37.990s",
+                                "word": "спасибо",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "38.200s",
+                                "endTime": "38.299s",
+                                "word": "мы",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "38.366s",
+                                "endTime": "38.866s",
+                                "word": "записали",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "38.919s",
+                                "endTime": "39.100s",
+                                "word": "ваш",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "39.180s",
+                                "endTime": "39.620s",
+                                "word": "номер",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "39.700s",
+                                "endTime": "39.720s",
+                                "word": "и",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "39.780s",
+                                "endTime": "40.340s",
+                                "word": "перезвоним",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "40.400s",
+                                "endTime": "40.606s",
+                                "word": "вам",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "40.646s",
+                                "endTime": "40.679s",
+                                "word": "в",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "40.720s",
+                                "endTime": "41.260s",
+                                "word": "ближайшее",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "41.380s",
+                                "endTime": "41.750s",
+                                "word": "время",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "42.099s",
+                                "endTime": "42.580s",
+                                "word": "хорошего",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "42.620s",
+                                "endTime": "42.793s",
+                                "word": "вам",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "42.860s",
+                                "endTime": "43.173s",
+                                "word": "дня",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "43.433s",
+                                "endTime": "43.480s",
+                                "word": "и",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "43.540s",
+                                "endTime": "43.639s",
+                                "word": "до",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "43.719s",
+                                "endTime": "44.226s",
+                                "word": "связи",
+                                "confidence": 1
+                            }
+                        ],
+                        "text": "Спасибо мы записали ваш номер и перезвоним вам в ближайшее время хорошего вам дня и до связи",
+                        "confidence": 1
+                    }
+                ],
+                "channelTag": "2"
+            },
+            {
+                "alternatives": [
+                    {
+                        "words": [
+                            {
+                                "startTime": "46.049s",
+                                "endTime": "46.109s",
+                                "word": "ну",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "46.150s",
+                                "endTime": "46.290s",
+                                "word": "что",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "46.310s",
+                                "endTime": "46.350s",
+                                "word": "ж",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "46.390s",
+                                "endTime": "46.589s",
+                                "word": "тогда",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "46.629s",
+                                "endTime": "46.950s",
+                                "word": "извините",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "47.009s",
+                                "endTime": "47.049s",
+                                "word": "за",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "47.089s",
+                                "endTime": "47.690s",
+                                "word": "беспокойство",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "47.769s",
+                                "endTime": "47.950s",
+                                "word": "всего",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "47.990s",
+                                "endTime": "48.410s",
+                                "word": "доброго",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "48.490s",
+                                "endTime": "48.543s",
+                                "word": "до",
+                                "confidence": 1
+                            },
+                            {
+                                "startTime": "48.583s",
+                                "endTime": "48.970s",
+                                "word": "свидания",
+                                "confidence": 1
+                            }
+                        ],
+                        "text": "Ну что ж тогда извините за беспокойство всего доброго до свидания",
+                        "confidence": 1
+                    }
+                ],
+                "channelTag": "1"
+            }
+        ]
+    },
+    "id": "e03e0u7r0ff5vtb234p6",
+    "createdAt": "2023-11-11T21:34:56Z",
+    "createdBy": "aje5o720ktumv8shjg0l",
+    "modifiedAt": "2023-11-11T21:35:07Z"
+}

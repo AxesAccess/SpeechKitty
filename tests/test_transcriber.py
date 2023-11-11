@@ -9,9 +9,9 @@ import pytest
 import requests_mock
 from app.speechkitty.transcriber import Transcriber
 
-OGG_PATH = "sample/records/out-88001000800-102-20231014-184547-1697298346.17.ogg"
-WAV_PATH = "sample/records/out-88001000800-102-20231014-184547-1697298346.17.wav"
-JSON_PATH = "sample/records/out-88001000800-102-20231014-184547-1697298346.17.json"
+OGG_PATH = "sample/records/rg-170-74994043564-20231021-171101-1697897360.54.ogg"
+WAV_PATH = "sample/records/rg-170-74994043564-20231021-171101-1697897360.54.wav"
+JSON_PATH = "sample/records/rg-170-74994043564-20231021-171101-1697897360.54.json"
 STORAGE_BASE_URL = "https://storage.yandexcloud.net"
 AWS_ACCESS_KEY_ID = "test_access_key_id"
 AWS_SECRET_ACCESS_KEY = "test_access_key"
@@ -31,21 +31,21 @@ class TestTranscriber(unittest.TestCase):
         )
 
     @pytest.mark.filterwarnings("ignore: Convert")
-    def test_wav_to_ogg_fail_caught(self):
+    def test_to_ogg_fail_caught(self):
         self.transcriber.set_raise_exceptions(False)
-        ogg_path = self.transcriber.wav_to_ogg(WAV_PATH + "nonexistent")
+        ogg_path = self.transcriber.to_ogg(WAV_PATH + "nonexistent")
         assert not ogg_path
 
-    def test_wav_to_ogg_fail_raised(self):
+    def test_to_ogg_fail_raised(self):
         self.transcriber.set_raise_exceptions(True)
         try:
-            _ = self.transcriber.wav_to_ogg(WAV_PATH + "nonexistent")
+            _ = self.transcriber.to_ogg(WAV_PATH + "nonexistent")
             assert False
         except FileNotFoundError:
             assert True
 
-    def test_wav_to_ogg(self):
-        ogg_path = self.transcriber.wav_to_ogg(WAV_PATH)
+    def test_to_ogg(self):
+        ogg_path = self.transcriber.to_ogg(WAV_PATH)
         assert ogg_path == tempfile.gettempdir() + "/" + os.path.basename(OGG_PATH)
 
     @mock_s3
