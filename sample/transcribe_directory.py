@@ -3,16 +3,37 @@ import os
 import sys
 import traceback
 from speechkitty import Directory, Transcriber, Parser
+from configparser import ConfigParser
 
 
 def main():
+    credentials_ini = os.path.dirname(os.path.realpath(__file__)) + "/credentials.ini"
+
+    if os.path.isfile(credentials_ini):
+        try:
+            conf = ConfigParser()
+            conf.read(credentials_ini)
+            aws_access_key_id = str(conf["Storage API"]["AWS_ACCESS_KEY_ID"])
+            aws_secret_access_key = str(conf["Storage API"]["AWS_SECRET_ACCESS_KEY"])
+            storage_bucket_name = str(conf["Storage API"]["STORAGE_BUCKET_NAME"])
+            transcribe_api_key = str(conf["SpeechKit API"]["TRANSCRIBE_API_KEY"])
+            language_code = str(conf["SpeechKit API"]["LANGUAGE_CODE"])
+        except Exception:
+            print("Error parsing credentials.ini.")
+            return 1
+    else:
+        try:
+            aws_access_key_id = str(os.environ.get("AWS_ACCESS_KEY_ID"))
+            aws_secret_access_key = str(os.environ.get("AWS_SECRET_ACCESS_KEY"))
+            storage_bucket_name = str(os.environ.get("STORAGE_BUCKET_NAME"))
+            transcribe_api_key = str(os.environ.get("TRANSCRIBE_API_KEY"))
+            language_code = str(os.environ.get("LANGUAGE_CODE"))
+        except Exception:
+            print("Error getting environment variables.")
+            return 1
+
     try:
         rec_dir = sys.argv[1]
-        aws_access_key_id = str(os.environ.get("AWS_ACCESS_KEY_ID"))
-        aws_secret_access_key = str(os.environ.get("AWS_SECRET_ACCESS_KEY"))
-        storage_bucket_name = str(os.environ.get("STORAGE_BUCKET_NAME"))
-        transcribe_api_key = str(os.environ.get("TRANSCRIBE_API_KEY"))
-        language_code = str(os.environ.get("LANGUAGE_CODE"))
     except Exception:
         print("Not enough arguments.")
         return 1
@@ -22,6 +43,7 @@ def main():
     except Exception:
         filename_hash_func = ""
 
+    include = "^.+\\.wav$"
     # This is business specific, delete it from your production code
     exclude = "^.+(:?-in|-out)\\.wav$"
 
@@ -29,14 +51,9 @@ def main():
     directory = Directory(rec_dir)
 
     # Find files recursively
-    wavs = directory.get_wavs(regexp_exclude=exclude, skip_processed=True)
-
-    # This is business specific, delete it from your production code
-    for i in range(len(wavs)):
-        if "wav-mix" in wavs[i]:
-            new = wavs[i].replace(".wav-mix", "")
-            os.rename(wavs[i], new)
-            wavs[i] = new
+    wavs = directory.get_records(
+        regexp_include=include, regexp_exclude=exclude, skip_processed=True
+    )
 
     # If there're no files found just exit silently
     if not wavs:
