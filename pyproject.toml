@@ -7,7 +7,7 @@ name = "speechkitty"
 description = "A wrapper for Yandex SpeechKit API to asyncronously transcribe audio records."
 dynamic = ["readme"]
 authors = [{ name = "Aleksei Prishchepo", email = "speechkitty@outlook.com" }]
-version = "0.1.6"
+version = "0.1.7"
 license = { text = "Apache 2.0" }
 requires-python = ">=3.8"
 dependencies = ["boto3", "pandas", "pydub", "requests"]
