@@ -18,7 +18,7 @@ def main():
     dir = Directory(rec_dir)
 
     include = "(?:-in|-out)\\.wav"
-    wavs = dir.get_wavs(regexp_include=include, skip_processed=True)
+    wavs = dir.get_records(regexp_include=include, skip_processed=True)
 
     df = pd.DataFrame(wavs, columns=["filename"])
 
