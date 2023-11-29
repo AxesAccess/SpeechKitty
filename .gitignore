@@ -165,3 +165,6 @@ credentials.txt
 
 # VS Code
 .vscode
+
+# GitHub self-hosted actions runner
+actions-runner
