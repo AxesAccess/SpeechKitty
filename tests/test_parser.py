@@ -17,14 +17,23 @@ class TestParser(unittest.TestCase):
         files = [f"{PATH}/{f}" for f in listdir(PATH) if f[-5:] == ".json"]
         wavs = [f"{PATH}/{f}" for f in listdir(PATH) if f[-4:] == ".wav"]
         self.wav_path = wavs[0]
-        with open(files[0], "r") as f:
-            self.result = json.loads(f.read())
+        for filename in files:
+            if ".whisper." in filename:
+                with open(filename, "r") as f:
+                    self.result_whisper = json.loads(f.read())
+            else:
+                with open(filename, "r") as f:
+                    self.result = json.loads(f.read())
 
     def test_header_footer(self) -> None:
         assert len(self.parser.header) & len(self.parser.footer)
 
     def test_parse_result(self):
         df = self.parser.parse_result(self.result)
+        assert isinstance(df, pd.DataFrame)
+
+    def test_parse_result_whisper(self):
+        df = self.parser.parse_result(self.result_whisper)
         assert isinstance(df, pd.DataFrame)
 
     def test_parse_result_no_chunks(self):
@@ -44,7 +53,7 @@ class TestParser(unittest.TestCase):
     @pytest.mark.filterwarnings("ignore:Hash")
     def test_name_html_shake_128(self):
         html_name = self.parser.name_html(self.wav_path, hash_func="shake_128")
-        assert (html_name[:-4] == self.wav_path[:-3])
+        assert html_name[:-4] == self.wav_path[:-3]
 
     def test_name_html_hash(self):
         algorithms = hashlib.algorithms_guaranteed - {"shake_128", "shake_256"}

@@ -17,15 +17,18 @@ AWS_ACCESS_KEY_ID = "test_access_key_id"
 AWS_SECRET_ACCESS_KEY = "test_access_key"
 STORAGE_BUCKET_NAME = "test_bucket"
 TRANSCRIBE_API_KEY = "test_api_key"
+WHISPER_ENDPOINT = ""
 
 
 class TestTranscriber(unittest.TestCase):
     def setUp(self):
         self.transcriber = Transcriber(
+            api="SpeechKit",
             aws_access_key_id=AWS_ACCESS_KEY_ID,
             aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
             storage_bucket_name=STORAGE_BUCKET_NAME,
             transcribe_api_key=TRANSCRIBE_API_KEY,
+            whisper_endpoint=WHISPER_ENDPOINT,
             language_code="ru-RU",
             mode="longRunningRecognize",
         )
