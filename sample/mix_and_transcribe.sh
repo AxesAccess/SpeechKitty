@@ -16,13 +16,8 @@ fi
 
 # Get path to script directory
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-# Parse credentials.ini for variables
-grep = $SCRIPT_DIR/credentials.ini >$SCRIPT_DIR/credentials.txt
 
 # Combine files with two separate channels into stereo files (mix_channels.py), then transcribe stereo files (transcribe_directory.py).
 # Note that mix_channels.py skips already transcribed files. 
-docker run -i --rm --env-file $SCRIPT_DIR/credentials.txt -v $1:/mnt/Records \
+docker run -i --rm --env-file $SCRIPT_DIR/.env -v $1:/mnt/Records \
 speechkitty /bin/bash -c "python sample/mix_channels.py /mnt/Records && python sample/transcribe_directory.py /mnt/Records $2"
-
-# Clean up
-rm -f $SCRIPT_DIR/credentials.txt

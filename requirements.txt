@@ -4,3 +4,5 @@ pydub
 Requests
 moto
 requests_mock
+python-dotenv
+click

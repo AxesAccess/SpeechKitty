@@ -18,22 +18,22 @@ class Transcriber:
 
     def __init__(
         self,
-        aws_access_key_id: str,
-        aws_secret_access_key: str,
-        storage_bucket_name: str,
-        transcribe_api_key: str,
-        language_code: str,
+        api: str,
+        aws_access_key_id: str = None,
+        aws_secret_access_key: str = None,
+        storage_bucket_name: str = None,
+        transcribe_api_key: str = None,
+        language_code: str = None,
+        whisper_endpoint: str = None,
         mode: str = "longRunningRecognize",
         raise_exceptions: bool = False,
     ) -> None:
-        self.aws_key_id = aws_access_key_id
-        self.aws_key = aws_secret_access_key
-        self.storage_bucket_name = storage_bucket_name
-        self.transcribe_api_key = transcribe_api_key
-        self.language_code = language_code
+        class_member = dict(locals())
+        del class_member["self"]
+        for key, value in class_member.items():
+            setattr(Transcriber, key, value)
         self.transcribe_endpoint = f"{self.transcribe_endpoint}/{mode}"
         self.temp_dir = tempfile.gettempdir()
-        self.raise_exceptions = raise_exceptions
 
     def set_raise_exceptions(self, raise_exceptions: bool = True):
         self.raise_exceptions = raise_exceptions
@@ -58,8 +58,8 @@ class Transcriber:
         if not s3_client:
             session = boto3.session.Session(  # type: ignore
                 region_name=self.region_name,
-                aws_access_key_id=self.aws_key_id,
-                aws_secret_access_key=self.aws_key,
+                aws_access_key_id=self.aws_access_key_id,
+                aws_secret_access_key=self.aws_secret_access_key,
             )
             s3_client = session.client(service_name="s3", endpoint_url=self.storage_endpoint)
         try:
@@ -76,8 +76,8 @@ class Transcriber:
         if not s3_client:
             session = boto3.session.Session(  # type: ignore
                 region_name=self.region_name,
-                aws_access_key_id=self.aws_key_id,
-                aws_secret_access_key=self.aws_key,
+                aws_access_key_id=self.aws_access_key_id,
+                aws_secret_access_key=self.aws_secret_access_key,
             )
             s3_client = session.client(service_name="s3", endpoint_url=self.storage_endpoint)
         try:
@@ -116,7 +116,22 @@ class Transcriber:
                 return
         return response
 
-    def transcribe_file(self, wav_path: str, s3_client=None):
+    def transcribe_file(self, wav_path: str, s3_client=None) -> str | None:
+        # If using Whisper API send a request and we're done
+        if self.api == "whisperX":
+            try:
+                with open(wav_path, "rb") as f:
+                    headers = {"accept": "application/json"}
+                    files = {"file": f}
+                    response = requests.post(self.whisper_endpoint, headers=headers, files=files)
+                return response.json()
+            except Exception as e:
+                if self.raise_exceptions:
+                    raise e
+                else:
+                    warnings.warn(f"Transcribe error: {traceback.format_exc()}")
+                    return
+
         ogg_path = self.to_ogg(wav_path)
 
         # Upload ogg to object storage

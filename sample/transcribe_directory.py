@@ -3,34 +3,19 @@ import os
 import sys
 import traceback
 from speechkitty import Directory, Transcriber, Parser
-from configparser import ConfigParser
+from dotenv import find_dotenv, load_dotenv
 
 
 def main():
-    credentials_ini = os.path.dirname(os.path.realpath(__file__)) + "/credentials.ini"
+    load_dotenv(find_dotenv())
 
-    if os.path.isfile(credentials_ini):
-        try:
-            conf = ConfigParser()
-            conf.read(credentials_ini)
-            aws_access_key_id = str(conf["Storage API"]["AWS_ACCESS_KEY_ID"])
-            aws_secret_access_key = str(conf["Storage API"]["AWS_SECRET_ACCESS_KEY"])
-            storage_bucket_name = str(conf["Storage API"]["STORAGE_BUCKET_NAME"])
-            transcribe_api_key = str(conf["SpeechKit API"]["TRANSCRIBE_API_KEY"])
-            language_code = str(conf["SpeechKit API"]["LANGUAGE_CODE"])
-        except Exception:
-            print("Error parsing credentials.ini.")
-            return 1
-    else:
-        try:
-            aws_access_key_id = str(os.environ.get("AWS_ACCESS_KEY_ID"))
-            aws_secret_access_key = str(os.environ.get("AWS_SECRET_ACCESS_KEY"))
-            storage_bucket_name = str(os.environ.get("STORAGE_BUCKET_NAME"))
-            transcribe_api_key = str(os.environ.get("TRANSCRIBE_API_KEY"))
-            language_code = str(os.environ.get("LANGUAGE_CODE"))
-        except Exception:
-            print("Error getting environment variables.")
-            return 1
+    api = os.environ.get("API")
+    aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
+    aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
+    storage_bucket_name = os.environ.get("STORAGE_BUCKET_NAME")
+    transcribe_api_key = os.environ.get("TRANSCRIBE_API_KEY")
+    language_code = os.environ.get("LANGUAGE_CODE")
+    whisper_endpoint = os.environ.get("WHISPER_ENDPOINT")
 
     try:
         rec_dir = sys.argv[1]
@@ -65,12 +50,14 @@ def main():
     # wavs = random.choices(wavs, k=min(len(wavs), 10))
 
     transcriber = Transcriber(
+        api=api,
         aws_access_key_id=aws_access_key_id,
         aws_secret_access_key=aws_secret_access_key,
         storage_bucket_name=storage_bucket_name,
         transcribe_api_key=transcribe_api_key,
         language_code=language_code,
         raise_exceptions=False,
+        whisper_endpoint=whisper_endpoint,
     )
     parser = Parser()
 

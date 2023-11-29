@@ -34,11 +34,29 @@ class Parser:
     def __init__(self) -> None:
         pass
 
-    def parse_result(self, result) -> pd.DataFrame | None:
+    def parse_result(self, result, channel_tag: int = 1) -> pd.DataFrame | None:
         """Parses resulting json into a dataframe"""
         df = pd.DataFrame()
+        # whisperX API
+        if "segments" in result:
+            if len(result["segments"]) == 0:
+                return
+            for chunk in result["segments"]:
+                row = dict()
+                row["startTime"] = [chunk["start"]]
+                row["endTime"] = [chunk["end"]]
+                row["channelTag"] = [channel_tag]
+                row["text"] = [chunk["text"]]
+                df = pd.concat([df, pd.DataFrame(row)], ignore_index=True)
+            df.loc[:, "startTime"] = pd.to_numeric(df["startTime"])
+            df.loc[:, "endTime"] = pd.to_numeric(df["endTime"])
+            df = df.sort_values("startTime")
+            return df.reset_index(drop=True)
+
         if "chunks" not in result["response"]:
             return
+
+        # SpeechKit API
         for chunk in result["response"]["chunks"]:
             row = dict()
             row["startTime"] = [chunk["alternatives"][0]["words"][0]["startTime"].replace("s", "")]
@@ -64,7 +82,7 @@ class Parser:
         table = df.to_html(index=True)
         return self.header + table + self.footer
 
-    def name_html(self, wav_path: str, hash_func: str) -> str:
+    def name_html(self, wav_path: str, hash_func: str = "") -> str:
         wav_name = os.path.basename(wav_path)
         # Exclude variable length digest algorithms
         algorithms_exclude = {"shake_128", "shake_256"}
