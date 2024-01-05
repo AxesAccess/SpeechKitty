@@ -22,16 +22,14 @@ WHISPER_ENDPOINT = ""
 
 class TestTranscriber(unittest.TestCase):
     def setUp(self):
+        os.environ["TRANSCRIBE_API_KEY"] = TRANSCRIBE_API_KEY
         self.transcriber = Transcriber(
             api="SpeechKit",
-            aws_access_key_id=AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-            storage_bucket_name=STORAGE_BUCKET_NAME,
-            transcribe_api_key=TRANSCRIBE_API_KEY,
-            whisper_endpoint=WHISPER_ENDPOINT,
             language_code="ru-RU",
             mode="longRunningRecognize",
         )
+        self.transcriber.storage_base_url = STORAGE_BASE_URL
+        self.transcriber.storage_bucket_name = STORAGE_BUCKET_NAME
 
     @pytest.mark.filterwarnings("ignore: Convert")
     def test_to_ogg_fail_caught(self):
@@ -144,7 +142,7 @@ class TestTranscriber(unittest.TestCase):
         result = '{"id": "' + task_id + '"}'
         m.post(self.transcriber.transcribe_endpoint, text=result)
         m.get(self.transcriber.operation_endpoint + "/" + task_id, text="")
-        assert None is self.transcriber.transcribe_file(WAV_PATH, s3_resource.meta.client)
+        assert self.transcriber.transcribe_file(WAV_PATH, s3_resource.meta.client) is None
 
     @requests_mock.Mocker()
     @pytest.mark.filterwarnings("ignore: Upload")

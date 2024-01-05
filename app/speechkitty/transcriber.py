@@ -7,6 +7,7 @@ import requests
 import time
 from pydub import AudioSegment
 import boto3
+from dotenv import find_dotenv, load_dotenv
 
 
 class Transcriber:
@@ -18,27 +19,28 @@ class Transcriber:
 
     def __init__(
         self,
-        api: str,
-        aws_access_key_id: str = None,
-        aws_secret_access_key: str = None,
-        storage_bucket_name: str = None,
-        transcribe_api_key: str = None,
-        language_code: str = None,
-        whisper_endpoint: str = None,
+        api: str = "",
+        language_code: str = "",
         mode: str = "longRunningRecognize",
         raise_exceptions: bool = False,
     ) -> None:
-        class_member = dict(locals())
-        del class_member["self"]
-        for key, value in class_member.items():
-            setattr(Transcriber, key, value)
+        load_dotenv(find_dotenv())
+        self.api = api if api else os.environ.get("API")
+        self.language_code = language_code if language_code else os.environ.get("LANGUAGE_CODE")
+        self.aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
+        self.aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
+        self.storage_bucket_name = os.environ.get("STORAGE_BUCKET_NAME")
+        self.transcribe_api_key = os.environ.get("TRANSCRIBE_API_KEY")
+        self.whisper_endpoint = os.environ.get("WHISPER_ENDPOINT")
         self.transcribe_endpoint = f"{self.transcribe_endpoint}/{mode}"
         self.temp_dir = tempfile.gettempdir()
-
-    def set_raise_exceptions(self, raise_exceptions: bool = True):
         self.raise_exceptions = raise_exceptions
 
-    def to_ogg(self, file_path: str) -> str | None:
+    def set_raise_exceptions(self, raise_exceptions: bool = True):
+        # Used for tests
+        self.raise_exceptions = raise_exceptions
+
+    def to_ogg(self, file_path: str) -> str:
         try:
             fmt = os.path.basename(file_path[-3:]).lower()
             a = AudioSegment.from_file(file_path, fmt)
@@ -49,7 +51,7 @@ class Transcriber:
                 raise e
             else:
                 warnings.warn(f"Convert error: {file_path} {traceback.format_exc()}")
-                return
+                return ""
         return ogg_path
 
     def upload_ogg(self, file_path: str, s3_client=None) -> str | None:
@@ -117,12 +119,27 @@ class Transcriber:
         return response
 
     def transcribe_file(self, wav_path: str, s3_client=None) -> str | None:
-        # If using Whisper API send a request and we're done
+        # Check duration of the audio record
+        audio_duration = 0
+        audio_channels = 1
+        try:
+            audio = AudioSegment.from_file(wav_path)
+            audio_duration = audio.duration_seconds
+            audio_channels = audio.channels
+            if audio_duration < 1.0:
+                return
+        except Exception as e:
+            if self.raise_exceptions:
+                raise e
+            else:
+                warnings.warn(f"Transcribe error: {traceback.format_exc()}")
+                return
+        # If using Whisper API, send a request and we're done
         if self.api == "whisperX":
             try:
                 with open(wav_path, "rb") as f:
                     headers = {"accept": "application/json"}
-                    files = {"file": f}
+                    files = {"audio": f}
                     response = requests.post(self.whisper_endpoint, headers=headers, files=files)
                 return response.json()
             except Exception as e:
@@ -145,19 +162,16 @@ class Transcriber:
         id = self.submit_task(ogg_link)
 
         result = ""
+        # Calculate pause before first request of result
+        # using length of the audio (10 seconds per 1 minute * 1 channel)
+        time.sleep(audio_duration * audio_channels / 6)
         # Limit number of attempts to get result
-        for i in range(200):
-            time.sleep(3)
+        for _ in range(10):
             result = self.get_result(id)
             # If there's an error, stop trying
-            try:
-                if result["done"]:
-                    break
-            except Exception:
+            if result is None or result["done"]:
                 break
-
-        # TODO Calculate pause before first request of result
-        # using length of the audio (10 seconds for 1 minute * 1 channel)
+            time.sleep(3)
 
         if not result:
             return

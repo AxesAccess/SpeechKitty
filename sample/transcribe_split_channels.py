@@ -10,12 +10,7 @@ from speechkitty import Directory, Transcriber, Parser
 load_dotenv(find_dotenv())
 
 api = os.environ.get("API")
-aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
-aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
-storage_bucket_name = os.environ.get("STORAGE_BUCKET_NAME")
-transcribe_api_key = os.environ.get("TRANSCRIBE_API_KEY")
 language_code = os.environ.get("LANGUAGE_CODE")
-whisper_endpoint = os.environ.get("WHISPER_ENDPOINT")
 
 
 @click.command()
@@ -98,14 +93,9 @@ def main(
     )
 
     transcriber = Transcriber(
-        api=api,
-        aws_access_key_id=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key,
-        storage_bucket_name=storage_bucket_name,
-        transcribe_api_key=transcribe_api_key,
-        language_code=language_code,
+        api=api,  # type: ignore
+        language_code=language_code,  # type: ignore
         raise_exceptions=False,
-        whisper_endpoint=whisper_endpoint,
     )
     parser = Parser()
 

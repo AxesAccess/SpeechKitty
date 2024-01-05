@@ -23,7 +23,7 @@ def main():
     directory = Directory(rec_dir)
 
     # Find files recursively
-    jsons = directory.get_wavs(regexp_include=".+\\.json", skip_processed=False)
+    jsons = directory.get_records(regexp_include=".+\\.json", skip_processed=False)
 
     parser = Parser()
 

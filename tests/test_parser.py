@@ -38,7 +38,7 @@ class TestParser(unittest.TestCase):
 
     def test_parse_result_no_chunks(self):
         del self.result["response"]["chunks"]
-        assert self.parser.parse_result(self.result) is None
+        assert self.parser.parse_result(self.result).empty
 
     def test_create_html(self):
         df = self.parser.parse_result(self.result)
@@ -47,7 +47,7 @@ class TestParser(unittest.TestCase):
         assert len(doc.getElementsByTagName("table")) == 1
 
     def test_name_html(self):
-        html_name = self.parser.name_html(self.wav_path, hash_func=None)
+        html_name = self.parser.name_html(self.wav_path, hash_func="")
         assert html_name[:-4] == self.wav_path[:-3]
 
     @pytest.mark.filterwarnings("ignore:Hash")

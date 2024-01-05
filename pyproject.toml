@@ -7,7 +7,7 @@ name = "speechkitty"
 description = "A wrapper for two ASR services: Yandex SpeechKit and whisperX (based on OpenAI's Whisper) intended to asynchronously transcribe audio records."
 dynamic = ["readme"]
 authors = [{ name = "Aleksei Prishchepo", email = "speechkitty@outlook.com" }]
-version = "0.2.0"
+version = "0.2.1"
 license = { text = "Apache 2.0" }
 requires-python = ">=3.8"
 dependencies = ["boto3", "pandas", "pydub", "requests", "python-dotenv", "click"]

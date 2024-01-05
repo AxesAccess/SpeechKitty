@@ -34,13 +34,13 @@ class Parser:
     def __init__(self) -> None:
         pass
 
-    def parse_result(self, result, channel_tag: int = 1) -> pd.DataFrame | None:
+    def parse_result(self, result, channel_tag: int = 1) -> pd.DataFrame:
         """Parses resulting json into a dataframe"""
         df = pd.DataFrame()
         # whisperX API
         if "segments" in result:
             if len(result["segments"]) == 0:
-                return
+                return df
             for chunk in result["segments"]:
                 row = dict()
                 row["startTime"] = [chunk["start"]]
@@ -54,7 +54,7 @@ class Parser:
             return df.reset_index(drop=True)
 
         if "chunks" not in result["response"]:
-            return
+            return df
 
         # SpeechKit API
         for chunk in result["response"]["chunks"]:

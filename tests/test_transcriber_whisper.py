@@ -1,3 +1,4 @@
+import os
 import unittest
 import json
 import pytest
@@ -7,15 +8,13 @@ from app.speechkitty.transcriber import Transcriber
 OGG_PATH = "sample/records/rg-170-74994043564-20231021-171101-1697897360.54.ogg"
 WAV_PATH = "sample/records/rg-170-74994043564-20231021-171101-1697897360.54.wav"
 JSON_PATH = "sample/records/rg-170-74994043564-20231021-171101-1697897360.54.whisper.json"
-WHISPER_ENDPOINT = "http://localhost:9000/asr?encode=true&task=transcribe&output=json"
+WHISPER_ENDPOINT = "http://127.0.0.1:5001/whisperx?output=json"
 
 
 class TestTranscriber(unittest.TestCase):
     def setUp(self):
-        self.transcriber = Transcriber(
-            api="whisperX",
-            whisper_endpoint=WHISPER_ENDPOINT,
-        )
+        os.environ["WHISPER_ENDPOINT"] = WHISPER_ENDPOINT
+        self.transcriber = Transcriber(api="whisperX")
 
     @requests_mock.Mocker()
     def test_transcribe_file_empty_result_raised(self, m):
