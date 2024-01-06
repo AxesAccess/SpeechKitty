@@ -45,7 +45,7 @@ class Parser:
                 row = dict()
                 row["startTime"] = [chunk["start"]]
                 row["endTime"] = [chunk["end"]]
-                row["channelTag"] = [channel_tag]
+                row["channelTag"] = [chunk["speaker"]] if "speaker" in chunk else [channel_tag]
                 row["text"] = [chunk["text"]]
                 df = pd.concat([df, pd.DataFrame(row)], ignore_index=True)
             df.loc[:, "startTime"] = pd.to_numeric(df["startTime"])
@@ -72,6 +72,8 @@ class Parser:
         return df.reset_index(drop=True)
 
     def create_html(self, df: pd.DataFrame) -> str:
+        if df.empty:
+            return ""
         df = df.pivot_table(
             index=["startTime", "endTime"],
             values="text",
