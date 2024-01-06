@@ -19,17 +19,34 @@ class Transcriber:
     def __init__(
         self,
         api: str = "",
+        aws_access_key_id: str = "",
+        aws_secret_access_key: str = "",
+        storage_bucket_name: str = "",
+        transcribe_api_key: str = "",
         language_code: str = "",
+        whisper_endpoint: str = "",
         mode: str = "longRunningRecognize",
         raise_exceptions: bool = False,
     ) -> None:
         self.api = api if api else os.environ.get("API")
         self.language_code = language_code if language_code else os.environ.get("LANGUAGE_CODE")
-        self.aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
-        self.aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
-        self.storage_bucket_name = os.environ.get("STORAGE_BUCKET_NAME")
-        self.transcribe_api_key = os.environ.get("TRANSCRIBE_API_KEY")
-        self.whisper_endpoint = os.environ.get("WHISPER_ENDPOINT")
+        self.aws_access_key_id = (
+            aws_access_key_id if aws_access_key_id else os.environ.get("AWS_ACCESS_KEY_ID")
+        )
+        self.aws_secret_access_key = (
+            aws_secret_access_key
+            if aws_secret_access_key
+            else os.environ.get("AWS_SECRET_ACCESS_KEY")
+        )
+        self.storage_bucket_name = (
+            storage_bucket_name if storage_bucket_name else os.environ.get("STORAGE_BUCKET_NAME")
+        )
+        self.transcribe_api_key = (
+            transcribe_api_key if transcribe_api_key else os.environ.get("TRANSCRIBE_API_KEY")
+        )
+        self.whisper_endpoint = (
+            whisper_endpoint if whisper_endpoint else os.environ.get("WHISPER_ENDPOINT")
+        )
         self.transcribe_endpoint = f"{self.transcribe_endpoint}/{mode}"
         self.temp_dir = tempfile.gettempdir()
         self.raise_exceptions = raise_exceptions
