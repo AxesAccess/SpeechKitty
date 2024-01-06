@@ -7,7 +7,6 @@ import requests
 import time
 from pydub import AudioSegment
 import boto3
-from dotenv import find_dotenv, load_dotenv
 
 
 class Transcriber:
@@ -24,7 +23,6 @@ class Transcriber:
         mode: str = "longRunningRecognize",
         raise_exceptions: bool = False,
     ) -> None:
-        load_dotenv(find_dotenv())
         self.api = api if api else os.environ.get("API")
         self.language_code = language_code if language_code else os.environ.get("LANGUAGE_CODE")
         self.aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")

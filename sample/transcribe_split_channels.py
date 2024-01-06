@@ -7,12 +7,6 @@ import logging
 from speechkitty import Directory, Transcriber, Parser
 
 
-load_dotenv(find_dotenv())
-
-api = os.environ.get("API")
-language_code = os.environ.get("LANGUAGE_CODE")
-
-
 @click.command()
 @click.option(
     "rec_dir",
@@ -71,6 +65,12 @@ def main(
     skip_processed,
     hash_func,
 ):
+
+    load_dotenv(find_dotenv())
+
+    api = os.environ.get("API")
+    language_code = os.environ.get("LANGUAGE_CODE")
+
     dir = Directory(rec_dir)
     regexp_include = f".+(?:{left_suffix}|{right_suffix})\\{extension}"
     wavs = dir.get_records(regexp_include=regexp_include, skip_processed=skip_processed)
