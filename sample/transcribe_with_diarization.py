@@ -67,6 +67,7 @@ def main(
 ):
     load_dotenv(find_dotenv())
 
+    # Provides diarization
     api = "whisperX"
     language_code = os.environ.get("LANGUAGE_CODE")
 
@@ -90,11 +91,8 @@ def main(
         raise_exceptions=False,
     )
 
-    if not transcriber.whisper_endpoint:
-        raise NameError("WhisperX endpoint must be set in the .env")
-
     transcriber.whisper_endpoint = (
-        transcriber.whisper_endpoint
+        transcriber.whisper_endpoint  # type: ignore
         + f"f&diarize=%20&min_speakers={min_speakers}&max_speakers={max_speakers}"
     )
 

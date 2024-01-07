@@ -18,7 +18,7 @@ class Transcriber:
 
     def __init__(
         self,
-        api: str = "",
+        api: str,
         aws_access_key_id: str = "",
         aws_secret_access_key: str = "",
         storage_bucket_name: str = "",
@@ -29,6 +29,7 @@ class Transcriber:
         raise_exceptions: bool = False,
     ) -> None:
         self.api = api if api else os.environ.get("API")
+
         self.language_code = language_code if language_code else os.environ.get("LANGUAGE_CODE")
         self.aws_access_key_id = (
             aws_access_key_id if aws_access_key_id else os.environ.get("AWS_ACCESS_KEY_ID")
@@ -50,6 +51,19 @@ class Transcriber:
         self.transcribe_endpoint = f"{self.transcribe_endpoint}/{mode}"
         self.temp_dir = tempfile.gettempdir()
         self.raise_exceptions = raise_exceptions
+        if str(api).lower() == "whisperx" and not self.whisper_endpoint:
+            raise ValueError(
+                "Endpoint for whisperX must be set in the .env or passed in the parameter"
+            )
+        elif not (
+            self.aws_access_key_id
+            and self.aws_secret_access_key
+            and self.storage_bucket_name
+            and self.transcribe_api_key
+        ):
+            raise ValueError(
+                "Yandex Cloud credentials must be set in .env or passed in the parameters"
+            )
 
     def set_raise_exceptions(self, raise_exceptions: bool = True):
         # Used for tests
