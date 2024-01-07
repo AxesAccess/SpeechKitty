@@ -22,14 +22,41 @@ WHISPER_ENDPOINT = ""
 
 class TestTranscriber(unittest.TestCase):
     def setUp(self):
+        os.environ["AWS_SECRET_ACCESS_KEY"] = AWS_SECRET_ACCESS_KEY
+        os.environ["STORAGE_BUCKET_NAME"] = STORAGE_BUCKET_NAME
         os.environ["TRANSCRIBE_API_KEY"] = TRANSCRIBE_API_KEY
         self.transcriber = Transcriber(
             api="SpeechKit",
+            aws_access_key_id=AWS_ACCESS_KEY_ID,
             language_code="ru-RU",
             mode="longRunningRecognize",
         )
         self.transcriber.storage_base_url = STORAGE_BASE_URL
         self.transcriber.storage_bucket_name = STORAGE_BUCKET_NAME
+
+    def test_check_api_raised(self):
+        try:
+            _ = Transcriber(api="nonexistent")
+            assert False
+        except ValueError:
+            assert True
+
+    def test_check_parameters_raised(self):
+        try:
+            _ = Transcriber(api="SpeechKit")
+            assert False
+        except ValueError:
+            assert True
+
+    def test_check_parameters_ok(self):
+        try:
+            _ = Transcriber(
+                api="SpeechKit",
+                aws_access_key_id=AWS_ACCESS_KEY_ID,
+            )
+            assert True
+        except ValueError:
+            assert False
 
     @pytest.mark.filterwarnings("ignore: Convert")
     def test_to_ogg_fail_caught(self):

@@ -13,8 +13,23 @@ WHISPER_ENDPOINT = "http://127.0.0.1:5001/whisperx?output=json"
 
 class TestTranscriber(unittest.TestCase):
     def setUp(self):
-        os.environ["WHISPER_ENDPOINT"] = WHISPER_ENDPOINT
-        self.transcriber = Transcriber(api="whisperX")
+        self.transcriber = Transcriber(api="whisperX", whisper_endpoint=WHISPER_ENDPOINT)
+
+    def test_check_parameters_raised(self):
+        try:
+            os.environ["WHISPER_ENDPOINT"] = ""
+            _ = Transcriber(api="whisperX")
+            assert False
+        except ValueError:
+            assert True
+
+    def test_check_parameters_ok(self):
+        try:
+            os.environ["WHISPER_ENDPOINT"] = WHISPER_ENDPOINT
+            _ = Transcriber(api="whisperX")
+            assert True
+        except ValueError:
+            assert False
 
     @requests_mock.Mocker()
     def test_transcribe_file_empty_result_raised(self, m):
