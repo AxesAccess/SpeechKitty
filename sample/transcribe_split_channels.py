@@ -65,10 +65,11 @@ def main(
     skip_processed,
     hash_func,
 ):
-
     load_dotenv(find_dotenv())
 
-    api = os.environ.get("API")
+    # This makes sense only for whisperX because SpeechKit transcribes channels separately, so
+    # for SpeechKit combine channels using mix_channels.py and transcribe two for the price of one
+    api = "whisperX"
     language_code = os.environ.get("LANGUAGE_CODE")
 
     dir = Directory(rec_dir)
@@ -105,6 +106,7 @@ def main(
         logger.info(f"Starting processing record {i} of {len(records)}")
 
         df = pd.DataFrame()
+        result_combined = dict(segments=[])
         # Repeat for both channels' recordings
         for channel, filename in enumerate([row.inbound, row.outbound], start=1):
             logger.info(f"Transcribing {filename}")
@@ -124,9 +126,22 @@ def main(
                     f.write("")
                     continue
                 else:
+                    # Add speaker tag
+                    if "segments" in result:
+                        for segment in result["segments"]:  # type: ignore
+                            segment["speaker"] = str(channel)  # type: ignore
+                            if "words" in segment:
+                                for word in segment["words"]:  # type: ignore
+                                    word["speaker"] = str(channel)  # type: ignore
+                        result_combined["segments"] += result["segments"]  # type: ignore
                     f.write(json.dumps(result, ensure_ascii=False))
             df_tmp = parser.parse_result(result, channel)
             df = pd.concat([df, df_tmp], ignore_index=True)
+
+        json_path = row.Index[:-4] + ".json"
+        logger.info(f"Writing combined json to {json_path}")
+        with open(json_path, "w") as f:
+            f.write(json.dumps(result_combined, ensure_ascii=False))
 
         logger.info(f"Combined DataFrame length: {len(df)}")
 
