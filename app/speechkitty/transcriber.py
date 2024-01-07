@@ -51,11 +51,13 @@ class Transcriber:
         self.transcribe_endpoint = f"{self.transcribe_endpoint}/{mode}"
         self.temp_dir = tempfile.gettempdir()
         self.raise_exceptions = raise_exceptions
+        if str(api).lower() not in ["whisperx", "speechkit"]:
+            raise ValueError('Valid values for API are "whisperx" or "speechkit".')
         if str(api).lower() == "whisperx" and not self.whisper_endpoint:
             raise ValueError(
                 "Endpoint for whisperX must be set in the .env or passed in the parameter"
             )
-        elif not (
+        if str(api).lower() == "speechkit" and not (
             self.aws_access_key_id
             and self.aws_secret_access_key
             and self.storage_bucket_name
