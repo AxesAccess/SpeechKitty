@@ -93,7 +93,7 @@ def main(
 
     transcriber.whisper_endpoint = (
         transcriber.whisper_endpoint  # type: ignore
-        + f"f&diarize=%20&min_speakers={min_speakers}&max_speakers={max_speakers}"
+        + f"&diarize=%20&min_speakers={min_speakers}&max_speakers={max_speakers}"
     )
 
     parser = Parser()
