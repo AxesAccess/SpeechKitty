@@ -65,6 +65,8 @@ def main(
     skip_processed,
     hash_func,
 ):
+    logger = logging.getLogger(__name__)
+
     load_dotenv(find_dotenv())
 
     # This makes sense only for whisperX because SpeechKit transcribes channels separately, so
@@ -101,8 +103,6 @@ def main(
     parser = Parser()
 
     for i, row in enumerate(records.itertuples(), start=1):
-        logger = logging.getLogger(__name__)
-
         logger.info(f"Starting processing record {i} of {len(records)}")
 
         df = pd.DataFrame()

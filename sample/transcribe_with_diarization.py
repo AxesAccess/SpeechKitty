@@ -65,6 +65,8 @@ def main(
     skip_processed,
     hash_func,
 ):
+    logger = logging.getLogger(__name__)
+
     load_dotenv(find_dotenv())
 
     # Provides diarization
@@ -76,7 +78,7 @@ def main(
 
     include = f"^.+\\.{extension}$"
     # This is business specific, delete it from your production code
-    exclude = "^.+(:?-in|-out)\\.wav$"
+    exclude = "^.+(:?-in|-out|-mix)\\.wav$"
 
     # Find files recursively
     wavs = dir.get_records(
@@ -99,7 +101,6 @@ def main(
     parser = Parser()
 
     for i, wav_path in enumerate(wavs, start=1):
-        logger = logging.getLogger(__name__)
         logger.info(f"Starting processing record {i} of {len(wavs)}")
         logger.info(f"Transcribing {wav_path}")
         result = transcriber.transcribe_file(wav_path)
