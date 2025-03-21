@@ -2,7 +2,7 @@ import os
 import tempfile
 import unittest
 import boto3
-from moto import mock_s3
+from moto import mock_aws
 import json
 import shutil
 import pytest
@@ -76,12 +76,12 @@ class TestTranscriber(unittest.TestCase):
         ogg_path = self.transcriber.to_ogg(WAV_PATH)
         assert ogg_path == tempfile.gettempdir() + "/" + os.path.basename(OGG_PATH)
 
-    @mock_s3
+    @mock_aws
     @pytest.mark.filterwarnings("ignore: Upload")
     def test_upload_ogg_s3_fail_caught(self):
         assert not self.transcriber.upload_ogg(OGG_PATH + "nonexistent")
 
-    @mock_s3
+    @mock_aws
     def test_upload_ogg_s3_fail_raised(self):
         self.transcriber.set_raise_exceptions(True)
         try:
@@ -90,7 +90,7 @@ class TestTranscriber(unittest.TestCase):
         except FileNotFoundError:
             assert True
 
-    @mock_s3
+    @mock_aws
     def test_upload_ogg_s3(self):
         conn = boto3.resource("s3")
         s3_resource = conn.create_bucket(Bucket="test_bucket")
@@ -98,7 +98,7 @@ class TestTranscriber(unittest.TestCase):
         file_link = f"{STORAGE_BASE_URL}/{STORAGE_BUCKET_NAME}/{file_name}"
         assert file_link == self.transcriber.upload_ogg(OGG_PATH, s3_resource.meta.client)
 
-    @mock_s3
+    @mock_aws
     def test_delete_ogg(self):
         temp_path = self.transcriber.temp_dir + "/" + os.path.basename(OGG_PATH)
         shutil.copyfile(OGG_PATH, temp_path)
@@ -106,7 +106,7 @@ class TestTranscriber(unittest.TestCase):
         s3_resource = conn.create_bucket(Bucket="test_bucket")
         self.transcriber.delete_ogg(temp_path, s3_resource.meta.client)
 
-    @mock_s3
+    @mock_aws
     def test_delete_ogg_fail_raised(self):
         self.transcriber.set_raise_exceptions(True)
         try:
@@ -115,7 +115,7 @@ class TestTranscriber(unittest.TestCase):
         except FileNotFoundError:
             assert True
 
-    @mock_s3
+    @mock_aws
     @pytest.mark.filterwarnings("ignore: Delete")
     def test_delete_ogg_fail_caught(self):
         self.transcriber.set_raise_exceptions(False)
@@ -142,7 +142,7 @@ class TestTranscriber(unittest.TestCase):
         m.get(self.transcriber.operation_endpoint + "/" + task_id, text=result)
         assert json.loads(result) == self.transcriber.get_result(task_id)
 
-    @mock_s3
+    @mock_aws
     @requests_mock.Mocker()
     def test_transcribe_file_empty_result_raised(self, m):
         self.transcriber.set_raise_exceptions(True)
@@ -158,7 +158,7 @@ class TestTranscriber(unittest.TestCase):
         except json.decoder.JSONDecodeError:
             assert True
 
-    @mock_s3
+    @mock_aws
     @requests_mock.Mocker()
     @pytest.mark.filterwarnings("ignore: Result")
     def test_transcribe_file_empty_result_caught(self, m):
@@ -183,7 +183,7 @@ class TestTranscriber(unittest.TestCase):
         m.get(self.transcriber.operation_endpoint + "/" + task_id, text=result)
         assert None is self.transcriber.transcribe_file(WAV_PATH)
 
-    @mock_s3
+    @mock_aws
     @requests_mock.Mocker()
     def test_transcribe_file(self, m):
         conn = boto3.resource("s3")
