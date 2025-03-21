@@ -1,5 +1,6 @@
 import os
 import json
+from datetime import datetime
 import pandas as pd
 from dotenv import find_dotenv, load_dotenv
 import click
@@ -104,6 +105,12 @@ def main(
 
     for i, row in enumerate(records.itertuples(), start=1):
         logger.info(f"Starting processing record {i} of {len(records)}")
+
+        # Skip if modified less than 1 minute ago to avoid processing incomplete files
+        last_edit = max(os.stat(row.inbound).st_mtime, os.stat(row.outbound).st_mtime)
+        if (datetime.now() - datetime.fromtimestamp(last_edit)).seconds < 60:
+            logger.info("File was modified less than a minute ago.")
+            continue
 
         df = pd.DataFrame()
         result_combined = dict(segments=[])
