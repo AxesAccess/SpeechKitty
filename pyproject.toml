@@ -30,5 +30,5 @@ readme = { file = "README.md", content-type = "text/markdown" }
 dev = ["pytest", "moto", "requests_mock"]
 
 [project.urls]
-Homepage = "https://github.com/AlekseiPrishchepo/SpeechKitty"
-Source = "https://github.com/AlekseiPrishchepo/SpeechKitty"
+Homepage = "https://github.com/AxesAccess/SpeechKitty"
+Source = "https://github.com/AxesAccess/SpeechKitty"

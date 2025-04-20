@@ -1,6 +1,6 @@
 # SpeechKitty
 
-![python-package](https://github.com/AlekseiPrishchepo/SpeechKitty/actions/workflows/python-package.yml/badge.svg) ![docker-image](https://github.com/AlekseiPrishchepo/SpeechKitty/actions/workflows/docker-image.yml/badge.svg) [![Upload Python Package](https://github.com/AlekseiPrishchepo/SpeechKitty/actions/workflows/python-publish.yml/badge.svg)](https://github.com/AlekseiPrishchepo/SpeechKitty/actions/workflows/python-publish.yml)
+![python-package](https://github.com/AxesAccess/SpeechKitty/actions/workflows/python-package.yml/badge.svg) ![docker-image](https://github.com/AxesAccess/SpeechKitty/actions/workflows/docker-image.yml/badge.svg) [![Upload Python Package](https://github.com/AxesAccess/SpeechKitty/actions/workflows/python-publish.yml/badge.svg)](https://github.com/AxesAccess/SpeechKitty/actions/workflows/python-publish.yml)
 
 SpeechKitty is a wrapper for two ASR services: Yandex SpeechKit and whisperX (based on OpenAI's Whisper) intended to asynchronously transcribe audio records.
 
@@ -30,7 +30,7 @@ You can use it as a package or a docker container.
 
 -OR-
 
-* Up and running [whisperX-REST](https://github.com/AlekseiPrishchepo/whisperX-REST).
+* Up and running [whisperX-REST](https://github.com/AxesAccess/whisperX-REST).
 
 ### Python Package
 
@@ -42,10 +42,10 @@ You can use it as a package or a docker container.
 pip install speechkitty
 ```
 
-3. Download scripts from sample directory at [project page](https://github.com/AlekseiPrishchepo/SpeechKitty/tree/main/sample):
+3. Download scripts from sample directory at [project page](https://github.com/AxesAccess/SpeechKitty/tree/main/sample):
 
-* [.env-example](https://github.com/AlekseiPrishchepo/SpeechKitty/blob/main/sample/.env-example) — rename to ```.env```
-* [transcribe_directory.py](https://github.com/AlekseiPrishchepo/SpeechKitty/blob/main/sample/transcribe_directory.py)
+* [.env-example](https://github.com/AxesAccess/SpeechKitty/blob/main/sample/.env-example) — rename to ```.env```
+* [transcribe_directory.py](https://github.com/AxesAccess/SpeechKitty/blob/main/sample/transcribe_directory.py)
 
 4. Fill in credentials into ```.env```
 
@@ -59,7 +59,7 @@ python transcribe_directory.py /mnt/Records
 
 0. Install Docker.
 
-1. Download project's code from [project page](https://github.com/AlekseiPrishchepo/SpeechKitty) on GitHub.
+1. Download project's code from [project page](https://github.com/AxesAccess/SpeechKitty) on GitHub.
 
 2. Put credentials into ```.env``` file.
 
