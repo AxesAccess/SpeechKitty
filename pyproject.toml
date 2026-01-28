@@ -10,7 +10,7 @@ authors = [{ name = "Aleksei Prishchepo", email = "speechkitty@outlook.com" }]
 version = "0.2.2"
 license = { text = "Apache 2.0" }
 requires-python = ">=3.8"
-dependencies = ["boto3", "pandas", "pydub", "requests", "python-dotenv", "click"]
+dependencies = ["boto3", "pandas", "pydub", "requests", "python-dotenv", "click", "aiohttp", "aiofiles"]
 classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3 :: Only",
@@ -34,7 +34,8 @@ dev = [
     "requests_mock",
     "flake8",
     "black",
-    "mypy"
+    "mypy",
+    "pytest-asyncio"
 ]
 
 [tool.pytest.ini_options]

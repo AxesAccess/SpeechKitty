@@ -56,3 +56,16 @@ class CloudStorage:
                 raise e
             else:
                 warnings.warn(f"Delete error: {file_path} {traceback.format_exc()}")
+
+    async def upload_file_async(self, file_path: str, client=None) -> Optional[str]:
+        # boto3 is blocking, so we run it in a separate thread
+        import asyncio
+
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(None, self.upload_file, file_path, client)
+
+    async def delete_file_async(self, file_path: str, client=None) -> None:
+        import asyncio
+
+        loop = asyncio.get_running_loop()
+        await loop.run_in_executor(None, self.delete_file, file_path, client)

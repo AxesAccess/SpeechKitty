@@ -3,6 +3,7 @@ import os
 import time
 import warnings
 import traceback
+import aiohttp
 from pydub import AudioSegment
 
 from typing import Optional
@@ -95,8 +96,14 @@ class Transcriber:
     def to_ogg(self, file_path: str) -> str:
         return self.audio_converter.to_ogg(file_path)
 
+    async def to_ogg_async(self, file_path: str) -> str:
+        return await self.audio_converter.to_ogg_async(file_path)
+
     def upload_ogg(self, file_path: str, s3_client=None) -> Optional[str]:
         return self.cloud_storage.upload_file(file_path, s3_client)
+
+    async def upload_ogg_async(self, file_path: str, s3_client=None) -> Optional[str]:
+        return await self.cloud_storage.upload_file_async(file_path, s3_client)
 
     def delete_ogg(self, ogg_path: str, s3_client=None) -> None:
         try:
@@ -108,11 +115,30 @@ class Transcriber:
             else:
                 warnings.warn(f"Delete error: {ogg_path} {traceback.format_exc()}")
 
+    async def delete_ogg_async(self, ogg_path: str, s3_client=None) -> None:
+        import asyncio
+
+        loop = asyncio.get_running_loop()
+        try:
+            await loop.run_in_executor(None, os.unlink, ogg_path)
+            await self.cloud_storage.delete_file_async(ogg_path, s3_client)
+        except Exception as e:
+            if self.raise_exceptions:
+                raise e
+            else:
+                warnings.warn(f"Delete error: {ogg_path} {traceback.format_exc()}")
+
     def submit_task(self, file_link: str) -> str:
         return self.speech_service.submit_yandex_task(file_link)
 
+    async def submit_task_async(self, file_link: str, session: aiohttp.ClientSession) -> str:
+        return await self.speech_service.submit_yandex_task_async(file_link, session)
+
     def get_result(self, id: str):
         return self.speech_service.get_yandex_result(id)
+
+    async def get_result_async(self, id: str, session: aiohttp.ClientSession):
+        return await self.speech_service.get_yandex_result_async(id, session)
 
     def transcribe_file(self, wav_path: str, s3_client=None) -> Optional[str]:
         # Check duration of the audio record
@@ -162,5 +188,77 @@ class Transcriber:
 
         # Delete ogg from temp_dir and object storage
         self.delete_ogg(ogg_path, s3_client)
+
+        return result
+
+    async def transcribe_file_async(
+        self, wav_path: str, session: aiohttp.ClientSession, s3_client=None
+    ) -> Optional[str]:
+        import asyncio
+
+        # Check duration of the audio record
+        # Running pydub check in executor as it is blocking
+        loop = asyncio.get_running_loop()
+
+        def check_duration():
+            try:
+                audio = AudioSegment.from_file(wav_path)
+                return audio.duration_seconds, audio.channels
+            except Exception as e:
+                # If checking fails, we might want to log/warn and return None
+                # But here we just return exceptions to be handled by caller or wrapped
+                raise e
+
+        try:
+            audio_duration, audio_channels = await loop.run_in_executor(None, check_duration)
+            if audio_duration < 1.0:
+                return None
+        except Exception as e:
+            if self.raise_exceptions:
+                raise e
+            else:
+                warnings.warn(f"Transcribe error: {e}")
+                return None
+
+        # If using Whisper API, send a request and we're done
+        if self.api == "whisperx":
+            # Note: session is passed from caller
+            return await self.speech_service.transcribe_start_whisper_async(wav_path, session)
+
+        # Convert to OGG
+        ogg_path = await self.to_ogg_async(wav_path)
+        if not ogg_path:
+            return None
+
+        # Upload ogg to object storage
+        ogg_link = await self.upload_ogg_async(ogg_path, s3_client)
+
+        # If upload ended with error
+        if ogg_link is None:
+            return None
+
+        # Start transcribing task
+        id = await self.submit_task_async(ogg_link, session)
+        if not id:
+            return None
+
+        result = ""
+        # Calculate pause before first request of result
+        await asyncio.sleep(audio_duration * audio_channels / 6)
+
+        # Limit number of attempts to get result
+        for _ in range(10):
+            result_data = await self.get_result_async(id, session)
+            # If there's an error, stop trying
+            if result_data is None or result_data.get("done", False):
+                result = result_data
+                break
+            await asyncio.sleep(3)
+
+        if not result:
+            return None
+
+        # Delete ogg from temp_dir and object storage
+        await self.delete_ogg_async(ogg_path, s3_client)
 
         return result

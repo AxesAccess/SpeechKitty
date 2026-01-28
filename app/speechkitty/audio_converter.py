@@ -23,3 +23,10 @@ class AudioConverter:
                 warnings.warn(f"Convert error: {file_path} {traceback.format_exc()}")
                 return ""
         return ogg_path
+
+    async def to_ogg_async(self, file_path: str) -> str:
+        # pydub is CPU bound / blocking IO, run in executor
+        import asyncio
+
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(None, self.to_ogg, file_path)
