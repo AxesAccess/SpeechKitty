@@ -1,0 +1,8 @@
+boto3
+pandas
+pydub
+Requests
+moto
+requests_mock
+python-dotenv
+click
