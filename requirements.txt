@@ -1,9 +1,11 @@
+aiofiles
 aiohttp
 boto3
 click
 moto
 pandas
 pydub
+pytest-asyncio
 python-dotenv
 Requests
 requests_mock
