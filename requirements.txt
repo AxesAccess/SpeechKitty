@@ -1,8 +1,9 @@
+aiohttp
 boto3
+click
+moto
 pandas
 pydub
-Requests
-moto
-requests_mock
 python-dotenv
-click
+Requests
+requests_mock
