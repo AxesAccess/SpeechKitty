@@ -44,7 +44,7 @@ def main():
         inbound = inbound.pan(-1)
         outbound = outbound.pan(1)
         mix = inbound.overlay(outbound)
-        mix.export(row.Index, format="wav")
+        mix.export(row.Index + "-mix.wav", format="wav")
 
 
 if __name__ == "__main__":
