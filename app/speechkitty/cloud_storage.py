@@ -2,6 +2,7 @@ import os
 import traceback
 import warnings
 import boto3
+from typing import Optional
 
 
 class CloudStorage:
@@ -29,7 +30,7 @@ class CloudStorage:
         )
         return session.client(service_name="s3", endpoint_url=self.storage_endpoint)
 
-    def upload_file(self, file_path: str, client=None) -> str | None:
+    def upload_file(self, file_path: str, client=None) -> Optional[str]:
         file_name = os.path.basename(file_path)
         file_link = f"{self.storage_base_url}/{self.bucket_name}/{file_name}"
         if not client:

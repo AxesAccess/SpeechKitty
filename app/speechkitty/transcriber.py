@@ -5,6 +5,8 @@ import warnings
 import traceback
 from pydub import AudioSegment
 
+from typing import Optional
+
 from .cloud_storage import CloudStorage
 from .audio_converter import AudioConverter
 from .speech_service import SpeechService
@@ -93,7 +95,7 @@ class Transcriber:
     def to_ogg(self, file_path: str) -> str:
         return self.audio_converter.to_ogg(file_path)
 
-    def upload_ogg(self, file_path: str, s3_client=None) -> str | None:
+    def upload_ogg(self, file_path: str, s3_client=None) -> Optional[str]:
         return self.cloud_storage.upload_file(file_path, s3_client)
 
     def delete_ogg(self, ogg_path: str, s3_client=None) -> None:
@@ -112,7 +114,7 @@ class Transcriber:
     def get_result(self, id: str):
         return self.speech_service.get_yandex_result(id)
 
-    def transcribe_file(self, wav_path: str, s3_client=None) -> str | None:
+    def transcribe_file(self, wav_path: str, s3_client=None) -> Optional[str]:
         # Check duration of the audio record
         try:
             audio = AudioSegment.from_file(wav_path)
