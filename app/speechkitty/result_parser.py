@@ -48,8 +48,8 @@ class Parser:
                 row["channelTag"] = [chunk["speaker"]] if "speaker" in chunk else [channel_tag]
                 row["text"] = [chunk["text"]]
                 df = pd.concat([df, pd.DataFrame(row)], ignore_index=True)
-            df.loc[:, "startTime"] = pd.to_numeric(df["startTime"])
-            df.loc[:, "endTime"] = pd.to_numeric(df["endTime"])
+            df["startTime"] = pd.to_numeric(df["startTime"])
+            df["endTime"] = pd.to_numeric(df["endTime"])
             df = df.sort_values("startTime")
             return df.reset_index(drop=True)
 
@@ -65,8 +65,8 @@ class Parser:
             row["text"] = [chunk["alternatives"][0]["text"]]
             df = pd.concat([df, pd.DataFrame(row)], ignore_index=True)
 
-        df.loc[:, "startTime"] = pd.to_numeric(df["startTime"])
-        df.loc[:, "endTime"] = pd.to_numeric(df["endTime"])
+        df["startTime"] = pd.to_numeric(df["startTime"])
+        df["endTime"] = pd.to_numeric(df["endTime"])
         df = df.sort_values("startTime")
 
         return df.reset_index(drop=True)

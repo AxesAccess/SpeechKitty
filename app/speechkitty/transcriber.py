@@ -1,21 +1,16 @@
 from __future__ import annotations
 import os
-import tempfile
-import traceback
-import warnings
-import requests
 import time
+import warnings
+import traceback
 from pydub import AudioSegment
-import boto3
+
+from .cloud_storage import CloudStorage
+from .audio_converter import AudioConverter
+from .speech_service import SpeechService
 
 
 class Transcriber:
-    region_name = "ru-central1"
-    storage_endpoint = "https://storage.yandexcloud.net"
-    storage_base_url = "https://storage.yandexcloud.net"
-    transcribe_endpoint = "https://transcribe.api.cloud.yandex.net/speech/stt/v2"
-    operation_endpoint = "https://operation.api.cloud.yandex.net/operations"
-
     def __init__(
         self,
         api: str,
@@ -28,131 +23,97 @@ class Transcriber:
         mode: str = "longRunningRecognize",
         raise_exceptions: bool = False,
     ) -> None:
-        self.api = api if api else os.environ.get("API")
-
-        self.language_code = language_code if language_code else os.environ.get("LANGUAGE_CODE")
-        self.aws_access_key_id = (
-            aws_access_key_id if aws_access_key_id else os.environ.get("AWS_ACCESS_KEY_ID")
-        )
-        self.aws_secret_access_key = (
-            aws_secret_access_key
-            if aws_secret_access_key
-            else os.environ.get("AWS_SECRET_ACCESS_KEY")
-        )
-        self.storage_bucket_name = (
-            storage_bucket_name if storage_bucket_name else os.environ.get("STORAGE_BUCKET_NAME")
-        )
-        self.transcribe_api_key = (
-            transcribe_api_key if transcribe_api_key else os.environ.get("TRANSCRIBE_API_KEY")
-        )
-        self.whisper_endpoint = (
-            whisper_endpoint if whisper_endpoint else os.environ.get("WHISPER_ENDPOINT")
-        )
-        self.transcribe_endpoint = f"{self.transcribe_endpoint}/{mode}"
-        self.temp_dir = tempfile.gettempdir()
+        self.api = str(api).lower()
         self.raise_exceptions = raise_exceptions
-        if str(api).lower() not in ["whisperx", "speechkit"]:
+
+        # Initialize services
+        self.cloud_storage = CloudStorage(
+            aws_access_key_id=(
+                aws_access_key_id if aws_access_key_id else os.environ.get("AWS_ACCESS_KEY_ID", "")
+            ),
+            aws_secret_access_key=(
+                aws_secret_access_key
+                if aws_secret_access_key
+                else os.environ.get("AWS_SECRET_ACCESS_KEY", "")
+            ),
+            bucket_name=(
+                storage_bucket_name
+                if storage_bucket_name
+                else os.environ.get("STORAGE_BUCKET_NAME", "")
+            ),
+            raise_exceptions=raise_exceptions,
+        )
+
+        self.audio_converter = AudioConverter(raise_exceptions=raise_exceptions)
+
+        self.speech_service = SpeechService(
+            api_type=self.api,
+            transcribe_api_key=(
+                transcribe_api_key
+                if transcribe_api_key
+                else os.environ.get("TRANSCRIBE_API_KEY", "")
+            ),
+            language_code=language_code if language_code else os.environ.get("LANGUAGE_CODE", ""),
+            whisper_endpoint=(
+                whisper_endpoint if whisper_endpoint else os.environ.get("WHISPER_ENDPOINT", "")
+            ),
+            mode=mode,
+            raise_exceptions=raise_exceptions,
+        )
+
+        self.validate_config()
+
+    def validate_config(self):
+        if self.api not in ["whisperx", "speechkit"]:
             raise ValueError('Valid values for API are "whisperx" or "speechkit".')
-        if str(api).lower() == "whisperx" and not self.whisper_endpoint:
+
+        if self.api == "whisperx" and not self.speech_service.whisper_endpoint:
             raise ValueError(
                 "Endpoint for whisperX must be set in the .env or passed in the parameter"
             )
-        if str(api).lower() == "speechkit" and not (
-            self.aws_access_key_id
-            and self.aws_secret_access_key
-            and self.storage_bucket_name
-            and self.transcribe_api_key
-        ):
-            raise ValueError(
-                "Yandex Cloud credentials must be set in .env or passed in the parameters"
-            )
+
+        if self.api == "speechkit":
+            if not (
+                self.cloud_storage.aws_access_key_id
+                and self.cloud_storage.aws_secret_access_key
+                and self.cloud_storage.bucket_name
+                and self.speech_service.transcribe_api_key
+            ):
+                raise ValueError(
+                    "Yandex Cloud credentials must be set in .env or passed in the parameters"
+                )
 
     def set_raise_exceptions(self, raise_exceptions: bool = True):
         # Used for tests
         self.raise_exceptions = raise_exceptions
+        self.cloud_storage.raise_exceptions = raise_exceptions
+        self.audio_converter.raise_exceptions = raise_exceptions
+        self.speech_service.raise_exceptions = raise_exceptions
 
     def to_ogg(self, file_path: str) -> str:
-        try:
-            fmt = os.path.basename(file_path[-3:]).lower()
-            a = AudioSegment.from_file(file_path, fmt)
-            ogg_path = self.temp_dir + "/" + os.path.basename(file_path[:-4]) + ".ogg"
-            a.export(ogg_path, format="opus")
-        except Exception as e:
-            if self.raise_exceptions:
-                raise e
-            else:
-                warnings.warn(f"Convert error: {file_path} {traceback.format_exc()}")
-                return ""
-        return ogg_path
+        return self.audio_converter.to_ogg(file_path)
 
     def upload_ogg(self, file_path: str, s3_client=None) -> str | None:
-        file_name = os.path.basename(file_path)
-        file_link = f"{self.storage_base_url}/{self.storage_bucket_name}/{file_name}"
-        if not s3_client:
-            session = boto3.session.Session(  # type: ignore
-                region_name=self.region_name,
-                aws_access_key_id=self.aws_access_key_id,
-                aws_secret_access_key=self.aws_secret_access_key,
-            )
-            s3_client = session.client(service_name="s3", endpoint_url=self.storage_endpoint)
-        try:
-            s3_client.upload_file(file_path, self.storage_bucket_name, file_name)
-        except Exception as e:
-            if self.raise_exceptions:
-                raise e
-            else:
-                warnings.warn(f"Upload error: {file_path} {traceback.format_exc()}")
-                return
-        return file_link
+        return self.cloud_storage.upload_file(file_path, s3_client)
 
     def delete_ogg(self, ogg_path: str, s3_client=None) -> None:
-        if not s3_client:
-            session = boto3.session.Session(  # type: ignore
-                region_name=self.region_name,
-                aws_access_key_id=self.aws_access_key_id,
-                aws_secret_access_key=self.aws_secret_access_key,
-            )
-            s3_client = session.client(service_name="s3", endpoint_url=self.storage_endpoint)
         try:
             os.unlink(ogg_path)
-            for_deletion = [{"Key": os.path.basename(ogg_path)}]
-            s3_client.delete_objects(
-                Bucket=self.storage_bucket_name, Delete={"Objects": for_deletion}
-            )
+            self.cloud_storage.delete_file(ogg_path, s3_client)
         except Exception as e:
             if self.raise_exceptions:
                 raise e
             else:
                 warnings.warn(f"Delete error: {ogg_path} {traceback.format_exc()}")
-                return
 
     def submit_task(self, file_link: str) -> str:
-        body = {
-            "config": {"specification": {"languageCode": self.language_code}},
-            "audio": {"uri": file_link},
-        }
-        header = {"Authorization": f"Api-Key {self.transcribe_api_key}"}
-        response = requests.post(self.transcribe_endpoint, headers=header, json=body)
-        data = response.json()
-        return data["id"]
+        return self.speech_service.submit_yandex_task(file_link)
 
     def get_result(self, id: str):
-        header = {"Authorization": f"Api-Key {self.transcribe_api_key}"}
-        try:
-            response = requests.get(self.operation_endpoint + "/" + id, headers=header)
-            response = response.json()
-        except Exception as e:
-            if self.raise_exceptions:
-                raise e
-            else:
-                warnings.warn(f"Result error: {traceback.format_exc()}")
-                return
-        return response
+        return self.speech_service.get_yandex_result(id)
 
     def transcribe_file(self, wav_path: str, s3_client=None) -> str | None:
         # Check duration of the audio record
-        audio_duration = 0
-        audio_channels = 1
         try:
             audio = AudioSegment.from_file(wav_path)
             audio_duration = audio.duration_seconds
@@ -163,22 +124,12 @@ class Transcriber:
             if self.raise_exceptions:
                 raise e
             else:
-                warnings.warn(f"Transcribe error: {traceback.format_exc()}")
+                warnings.warn(f"Transcribe error: {e}")
                 return
+
         # If using Whisper API, send a request and we're done
-        if self.api == "whisperX":
-            try:
-                with open(wav_path, "rb") as f:
-                    headers = {"accept": "application/json"}
-                    files = {"audio": f}
-                    response = requests.post(self.whisper_endpoint, headers=headers, files=files)
-                return response.json()
-            except Exception as e:
-                if self.raise_exceptions:
-                    raise e
-                else:
-                    warnings.warn(f"Transcribe error: {traceback.format_exc()}")
-                    return
+        if self.api == "whisperx":
+            return self.speech_service.transcribe_start_whisper(wav_path)
 
         ogg_path = self.to_ogg(wav_path)
 
@@ -200,7 +151,7 @@ class Transcriber:
         for _ in range(10):
             result = self.get_result(id)
             # If there's an error, stop trying
-            if result is None or result["done"]:
+            if result is None or result.get("done", False):
                 break
             time.sleep(3)
 

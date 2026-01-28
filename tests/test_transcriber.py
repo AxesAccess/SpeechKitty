@@ -31,8 +31,8 @@ class TestTranscriber(unittest.TestCase):
             language_code="ru-RU",
             mode="longRunningRecognize",
         )
-        self.transcriber.storage_base_url = STORAGE_BASE_URL
-        self.transcriber.storage_bucket_name = STORAGE_BUCKET_NAME
+        self.transcriber.cloud_storage.storage_base_url = STORAGE_BASE_URL
+        self.transcriber.cloud_storage.bucket_name = STORAGE_BUCKET_NAME
 
     def test_check_api_raised(self):
         try:
@@ -74,7 +74,9 @@ class TestTranscriber(unittest.TestCase):
 
     def test_to_ogg(self):
         ogg_path = self.transcriber.to_ogg(WAV_PATH)
-        assert ogg_path == tempfile.gettempdir() + "/" + os.path.basename(OGG_PATH)
+        assert ogg_path == self.transcriber.audio_converter.temp_dir + "/" + os.path.basename(
+            OGG_PATH
+        )
 
     @mock_aws
     @pytest.mark.filterwarnings("ignore: Upload")
@@ -100,7 +102,7 @@ class TestTranscriber(unittest.TestCase):
 
     @mock_aws
     def test_delete_ogg(self):
-        temp_path = self.transcriber.temp_dir + "/" + os.path.basename(OGG_PATH)
+        temp_path = self.transcriber.audio_converter.temp_dir + "/" + os.path.basename(OGG_PATH)
         shutil.copyfile(OGG_PATH, temp_path)
         conn = boto3.resource("s3")
         s3_resource = conn.create_bucket(Bucket="test_bucket")
@@ -129,7 +131,7 @@ class TestTranscriber(unittest.TestCase):
     def test_submit_task(self, m):
         task_id = "ca9x8ew1l8g06hgdlf6r"
         result = '{"id": "' + task_id + '"}'
-        m.post(self.transcriber.transcribe_endpoint, text=result)
+        m.post(self.transcriber.speech_service.transcribe_endpoint, text=result)
         file_name = os.path.basename(OGG_PATH)
         file_link = f"{STORAGE_BASE_URL}/{STORAGE_BUCKET_NAME}/{file_name}"
         assert task_id == self.transcriber.submit_task(file_link)
@@ -139,7 +141,7 @@ class TestTranscriber(unittest.TestCase):
         task_id = "ca9x8ew1l8g06hgdlf6r"
         with open(JSON_PATH, "r") as f:
             result = f.read()
-        m.get(self.transcriber.operation_endpoint + "/" + task_id, text=result)
+        m.get(self.transcriber.speech_service.operation_endpoint + "/" + task_id, text=result)
         assert json.loads(result) == self.transcriber.get_result(task_id)
 
     @mock_aws
@@ -150,8 +152,8 @@ class TestTranscriber(unittest.TestCase):
         s3_resource = conn.create_bucket(Bucket="test_bucket")
         task_id = "ca9x8ew1l8g06hgdlf6r"
         result = '{"id": "' + task_id + '"}'
-        m.post(self.transcriber.transcribe_endpoint, text=result)
-        m.get(self.transcriber.operation_endpoint + "/" + task_id, text="")
+        m.post(self.transcriber.speech_service.transcribe_endpoint, text=result)
+        m.get(self.transcriber.speech_service.operation_endpoint + "/" + task_id, text="")
         try:
             _ = self.transcriber.transcribe_file(WAV_PATH, s3_resource.meta.client)
             assert False
@@ -167,8 +169,8 @@ class TestTranscriber(unittest.TestCase):
         s3_resource = conn.create_bucket(Bucket="test_bucket")
         task_id = "ca9x8ew1l8g06hgdlf6r"
         result = '{"id": "' + task_id + '"}'
-        m.post(self.transcriber.transcribe_endpoint, text=result)
-        m.get(self.transcriber.operation_endpoint + "/" + task_id, text="")
+        m.post(self.transcriber.speech_service.transcribe_endpoint, text=result)
+        m.get(self.transcriber.speech_service.operation_endpoint + "/" + task_id, text="")
         assert self.transcriber.transcribe_file(WAV_PATH, s3_resource.meta.client) is None
 
     @requests_mock.Mocker()
@@ -177,10 +179,10 @@ class TestTranscriber(unittest.TestCase):
         self.transcriber.set_raise_exceptions(False)
         task_id = "ca9x8ew1l8g06hgdlf6r"
         result = '{"id": "' + task_id + '"}'
-        m.post(self.transcriber.transcribe_endpoint, text=result)
+        m.post(self.transcriber.speech_service.transcribe_endpoint, text=result)
         with open(JSON_PATH, "r") as f:
             result = f.read()
-        m.get(self.transcriber.operation_endpoint + "/" + task_id, text=result)
+        m.get(self.transcriber.speech_service.operation_endpoint + "/" + task_id, text=result)
         assert None is self.transcriber.transcribe_file(WAV_PATH)
 
     @mock_aws
@@ -190,10 +192,10 @@ class TestTranscriber(unittest.TestCase):
         s3_resource = conn.create_bucket(Bucket="test_bucket")
         task_id = "ca9x8ew1l8g06hgdlf6r"
         result = '{"id": "' + task_id + '"}'
-        m.post(self.transcriber.transcribe_endpoint, text=result)
+        m.post(self.transcriber.speech_service.transcribe_endpoint, text=result)
         with open(JSON_PATH, "r") as f:
             result = f.read()
-        m.get(self.transcriber.operation_endpoint + "/" + task_id, text=result)
+        m.get(self.transcriber.speech_service.operation_endpoint + "/" + task_id, text=result)
         assert json.loads(result) == self.transcriber.transcribe_file(
             WAV_PATH, s3_resource.meta.client
         )

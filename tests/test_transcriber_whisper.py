@@ -35,7 +35,7 @@ class TestTranscriber(unittest.TestCase):
     def test_transcribe_file_empty_result_raised(self, m):
         self.transcriber.set_raise_exceptions(True)
         result = ""
-        m.post(self.transcriber.whisper_endpoint, text=result)
+        m.post(self.transcriber.speech_service.whisper_endpoint, text=result)
         try:
             _ = self.transcriber.transcribe_file(WAV_PATH)
             assert False
@@ -47,14 +47,14 @@ class TestTranscriber(unittest.TestCase):
     def test_transcribe_file_empty_result_caught(self, m):
         self.transcriber.set_raise_exceptions(False)
         result = ""
-        m.post(self.transcriber.whisper_endpoint, text=result)
+        m.post(self.transcriber.speech_service.whisper_endpoint, text=result)
         assert None is self.transcriber.transcribe_file(WAV_PATH)
 
     @requests_mock.Mocker()
     def test_transcribe_file(self, m):
         with open(JSON_PATH, "r") as f:
             result = f.read()
-        m.post(self.transcriber.whisper_endpoint, text=result)
+        m.post(self.transcriber.speech_service.whisper_endpoint, text=result)
         assert json.loads(result) == self.transcriber.transcribe_file(WAV_PATH)
 
     @requests_mock.Mocker()
