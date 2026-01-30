@@ -83,3 +83,27 @@ async def test_transcribe_file_async_whisper(transcriber):
             WAV_PATH, session
         )
         transcriber.audio_converter.to_ogg_async.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_transcribe_file_async_webhook(transcriber):
+    transcriber.webhook_url = "http://webhook.url"
+    session = MagicMock()
+    # Mock post context manager
+    post_mock = MagicMock()
+    post_mock.raise_for_status = MagicMock()
+
+    # Create an async context manager mock
+    post_ctx = MagicMock()
+    post_ctx.__aenter__ = AsyncMock(return_value=post_mock)
+    post_ctx.__aexit__ = AsyncMock(return_value=None)
+    session.post.return_value = post_ctx
+
+    with patch("pydub.AudioSegment.from_file") as mock_audio, patch("os.unlink"):
+        mock_audio.return_value.duration_seconds = 10.0
+        mock_audio.return_value.channels = 1
+
+        result = await transcriber.transcribe_file_async(WAV_PATH, session)
+
+        assert result == RESULT_JSON
+        session.post.assert_called_once_with("http://webhook.url", json=RESULT_JSON)

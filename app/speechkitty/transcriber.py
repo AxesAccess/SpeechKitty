@@ -23,10 +23,12 @@ class Transcriber:
         transcribe_api_key: str = "",
         language_code: str = "",
         whisper_endpoint: str = "",
+        webhook_url: str = "",
         mode: str = "longRunningRecognize",
         raise_exceptions: bool = False,
     ) -> None:
         self.api = str(api).lower()
+        self.webhook_url = webhook_url
         self.raise_exceptions = raise_exceptions
 
         # Initialize services
@@ -139,6 +141,18 @@ class Transcriber:
 
     async def get_result_async(self, id: str, session: aiohttp.ClientSession):
         return await self.speech_service.get_yandex_result_async(id, session)
+
+    async def send_webhook_async(self, data: dict, session: aiohttp.ClientSession):
+        if not self.webhook_url:
+            return
+        try:
+            async with session.post(self.webhook_url, json=data) as response:
+                response.raise_for_status()
+        except Exception as e:
+            if self.raise_exceptions:
+                raise e
+            else:
+                warnings.warn(f"Webhook error: {traceback.format_exc()}")
 
     def transcribe_file(self, wav_path: str, s3_client=None) -> Optional[str]:
         # Check duration of the audio record
@@ -260,5 +274,7 @@ class Transcriber:
 
         # Delete ogg from temp_dir and object storage
         await self.delete_ogg_async(ogg_path, s3_client)
+
+        await self.send_webhook_async(result, session)
 
         return result

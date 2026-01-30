@@ -47,10 +47,11 @@ async def process_file(wav_path, transcriber, parser, session, semaphore, filena
             print(f"Error processing {wav_path}: {traceback.format_exc()}")
 
 
-async def run_processing(wavs, api, language_code, filename_hash_func, limit):
+async def run_processing(wavs, api, language_code, filename_hash_func, limit, webhook_url):
     transcriber = Transcriber(
         api=api,  # type: ignore
         language_code=language_code,  # type: ignore
+        webhook_url=webhook_url,
         raise_exceptions=False,
     )
     parser = Parser()
@@ -72,7 +73,8 @@ async def run_processing(wavs, api, language_code, filename_hash_func, limit):
 @click.argument("rec_dir", type=click.Path(exists=True))
 @click.option("--hash-func", default="", help="Hash function for filenames")
 @click.option("--limit", default=10, help="Max simultaneous API requests")
-def main(rec_dir, hash_func, limit):
+@click.option("--webhook-url", default="", help="URL to send JSON results to")
+def main(rec_dir, hash_func, limit, webhook_url):
     load_dotenv(find_dotenv())
 
     api = os.environ.get("API")
@@ -100,7 +102,7 @@ def main(rec_dir, hash_func, limit):
     # If you want to limit number of records processed
     # wavs = random.choices(wavs, k=min(len(wavs), 10))
 
-    asyncio.run(run_processing(wavs, api, language_code, hash_func, limit))
+    asyncio.run(run_processing(wavs, api, language_code, hash_func, limit, webhook_url))
 
 
 if __name__ == "__main__":
