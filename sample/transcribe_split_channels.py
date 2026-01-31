@@ -165,6 +165,9 @@ def main(
         if webhook_url and result_combined.get("segments"):
             try:
                 logger.info(f"Sending webhook to {webhook_url}")
+                # Add file name to payload
+                file_name = os.path.basename(row.Index)
+                result_combined["file_name"] = file_name
                 response = requests.post(webhook_url, json=result_combined, timeout=10)
                 response.raise_for_status()
                 logger.info(f"Webhook sent successfully: {response.status_code}")

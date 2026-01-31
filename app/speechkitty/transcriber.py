@@ -142,11 +142,16 @@ class Transcriber:
     async def get_result_async(self, id: str, session: aiohttp.ClientSession):
         return await self.speech_service.get_yandex_result_async(id, session)
 
-    async def send_webhook_async(self, data: dict, session: aiohttp.ClientSession):
+    async def send_webhook_async(
+        self, data: dict, session: aiohttp.ClientSession, file_name: Optional[str] = None
+    ):
         if not self.webhook_url:
             return
         try:
-            async with session.post(self.webhook_url, json=data) as response:
+            payload = data.copy()
+            if file_name:
+                payload["file_name"] = file_name
+            async with session.post(self.webhook_url, json=payload) as response:
                 response.raise_for_status()
         except Exception as e:
             if self.raise_exceptions:
@@ -275,6 +280,8 @@ class Transcriber:
         # Delete ogg from temp_dir and object storage
         await self.delete_ogg_async(ogg_path, s3_client)
 
-        await self.send_webhook_async(result, session)
+        # Extract file name and send webhook
+        file_name = os.path.basename(wav_path)
+        await self.send_webhook_async(result, session, file_name=file_name)
 
         return result
