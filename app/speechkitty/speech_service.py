@@ -104,14 +104,32 @@ class SpeechService:
             return None
 
     async def transcribe_start_whisper_async(self, wav_path: str, session: aiohttp.ClientSession):
+        import json
+
         try:
             data = aiohttp.FormData()
+            # Use specific content_type for the file if possible, but pydub output is usually handled.
+            # aiohttp infers from filename usually.
             data.add_field("audio", open(wav_path, "rb"), filename=os.path.basename(wav_path))
 
             headers = {"accept": "application/json"}
             async with session.post(self.whisper_endpoint, headers=headers, data=data) as response:
+                # Read text first if debugging is needed, or relies on exception.
+                # But aiohttp raise_for_status reads the body to msg if not careful?
+                # No, it just checks status.
                 response.raise_for_status()
-                return await response.json()
+
+                if response.content_type == "application/json":
+                    return await response.json()
+                else:
+                    text = await response.text()
+                    try:
+                        return json.loads(text)
+                    except json.JSONDecodeError:
+                        warnings.warn(
+                            f"WhisperX response content-type is {response.content_type}, expected application/json. Response body: {text[:500]}"
+                        )
+                        return None
         except Exception as e:
             if self.raise_exceptions:
                 raise e
