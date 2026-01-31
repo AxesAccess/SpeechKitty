@@ -5,6 +5,7 @@ import pandas as pd
 from dotenv import find_dotenv, load_dotenv
 import click
 import logging
+import requests
 from speechkitty import Directory, Transcriber, Parser
 
 
@@ -58,6 +59,14 @@ from speechkitty import Directory, Transcriber, Parser
     type=str,
     help="Hash function to encode resulting html files' names.",
 )
+@click.option(
+    "webhook_url",
+    "--webhook-url",
+    default="",
+    show_default=True,
+    type=str,
+    help="URL to send JSON results to.",
+)
 def main(
     rec_dir,
     extension,
@@ -65,6 +74,7 @@ def main(
     right_suffix,
     skip_processed,
     hash_func,
+    webhook_url,
 ):
     logger = logging.getLogger(__name__)
 
@@ -99,6 +109,7 @@ def main(
     transcriber = Transcriber(
         api=api,  # type: ignore
         language_code=language_code,  # type: ignore
+        webhook_url=webhook_url,
         raise_exceptions=False,
     )
     parser = Parser()
@@ -149,6 +160,16 @@ def main(
         logger.info(f"Writing combined json to {json_path}")
         with open(json_path, "w") as f:
             f.write(json.dumps(result_combined, ensure_ascii=False))
+
+        # Send webhook if URL is provided
+        if webhook_url and result_combined.get("segments"):
+            try:
+                logger.info(f"Sending webhook to {webhook_url}")
+                response = requests.post(webhook_url, json=result_combined, timeout=10)
+                response.raise_for_status()
+                logger.info(f"Webhook sent successfully: {response.status_code}")
+            except Exception as e:
+                logger.warning(f"Webhook error: {e}")
 
         logger.info(f"Combined DataFrame length: {len(df)}")
 
