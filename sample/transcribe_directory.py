@@ -80,9 +80,9 @@ def main(rec_dir, hash_func, limit, webhook_url):
     api = os.environ.get("API")
     language_code = os.environ.get("LANGUAGE_CODE")
 
-    include = "^.+\\.wav$"
+    include = ".+\\.wav$"
     # This is business specific, delete it from your production code
-    exclude = "^.+(:?-in|-out)\\.wav$"
+    exclude = ".+(:?-in|-out)\\.wav$"
 
     # Set up directory
     directory = Directory(rec_dir)

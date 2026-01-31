@@ -256,7 +256,7 @@ class Transcriber:
         if not id:
             return None
 
-        result = ""
+        result = None
         # Calculate pause before first request of result
         await asyncio.sleep(audio_duration * audio_channels / 6)
 
