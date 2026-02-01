@@ -7,7 +7,7 @@ from app.speechkitty.transcriber import Transcriber
 WAV_PATH = "sample/records/test.wav"
 OGG_PATH = "sample/records/test.ogg"
 TASK_ID = "test_task_id"
-RESULT_JSON = {"done": True, "result": "text"}
+RESULT_JSON = {"done": True, "result": "text", "file_name": "test.wav"}
 WHISPER_RESULT = {"text": "whisper text"}
 
 
