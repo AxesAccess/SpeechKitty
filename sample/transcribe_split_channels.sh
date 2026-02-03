@@ -20,5 +20,5 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 # Searches for wav files containing left and right tracks (inbound and outbound call parts),
 # transcribes each independently and then combines pairs into resulting html files.
 # See 'sample/transcribe_split_channels.py' for details and parameters. 
-docker run -i --rm --env-file $SCRIPT_DIR/.env -v $1:/mnt/Records \
-speechkitty /bin/bash -c "python sample/transcribe_split_channels.py -d /mnt/Records -h $2"
+docker run -i --rm --name transcribe_split_channels --env-file $SCRIPT_DIR/.env -v $1:/mnt/Records \
+speechkitty /bin/bash -c "python sample/transcribe_split_channels.py -d /mnt/Records -h $2 --webhook-url $3"
