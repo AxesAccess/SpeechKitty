@@ -168,6 +168,8 @@ def main(
                 # Add file name to payload
                 file_name = os.path.basename(row.Index)
                 result_combined["file_name"] = file_name
+                # Remove file extension
+                result_combined["transcript_id"] = ".".join(file_name.split(".")[:-1])
                 response = requests.post(webhook_url, json=result_combined, timeout=10)
                 response.raise_for_status()
                 logger.info(f"Webhook sent successfully: {response.status_code}")
