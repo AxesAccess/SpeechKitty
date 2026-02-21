@@ -86,7 +86,7 @@ def main(
         regexp_include=regexp_include, regexp_exclude=f"{right_suffix}|{left_suffix}"
     )
 
-    records = pd.DataFrame(json_files, columns=["filename"])
+    records = pd.DataFrame(json_files, columns=["filename"]).tail(limit)
 
     for i, row in enumerate(records.iterrows(), start=1):
         logger.info(f"Starting processing transcription {i} of {len(records)}")
