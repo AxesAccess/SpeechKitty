@@ -165,12 +165,16 @@ def main(
         if webhook_url and result_combined.get("segments"):
             try:
                 logger.info(f"Sending webhook to {webhook_url}")
+                sales_signals_api_key = os.environ.get("WEBHOOK_API_KEY")
+                headers = {"Authorization": f"Bearer {sales_signals_api_key}"}
                 # Add file name to payload
                 file_name = os.path.basename(row.Index)
                 result_combined["file_name"] = file_name
                 # Remove file extension
                 result_combined["transcript_id"] = ".".join(file_name.split(".")[:-1])
-                response = requests.post(webhook_url, json=result_combined, timeout=10)
+                response = requests.post(
+                    webhook_url, json=result_combined, headers=headers, timeout=10
+                )
                 response.raise_for_status()
                 logger.info(f"Webhook sent successfully: {response.status_code}")
             except Exception as e:
