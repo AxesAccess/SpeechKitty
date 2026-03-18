@@ -100,11 +100,13 @@ def main(
                 logger.info(f"Sending webhook to {webhook_url}")
                 # Add file name to payload
                 file_name = os.path.basename(row[1].filename)
-                result["file_name"] = file_name
+                result["file_name"] = file_name.replace(".json", ".wav")
                 result["transcript_id"] = ".".join(file_name.split(".")[:-1])
                 result["quiet"] = True
                 if not dry_run:
-                    response = requests.post(webhook_url, json=result, timeout=10)
+                    sales_signals_api_key = os.environ.get("WEBHOOK_API_KEY")
+                    headers = {"Authorization": f"Bearer {sales_signals_api_key}"}
+                    response = requests.post(webhook_url, json=result, headers=headers, timeout=10)
                     response.raise_for_status()
                     logger.info(f"Webhook sent successfully: {response.status_code}")
             except Exception as e:
